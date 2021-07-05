@@ -2,10 +2,11 @@ package spbetu.prim.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -48,7 +49,7 @@ public class Controller implements Initializable {
     public void stackPaneClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the stackPane");
-            anchorPane.getChildren().remove((StackPane) mouseEvent.getSource());
+            view.removeNode((StackPane) mouseEvent.getSource());
             return;
         } else if (actionType != ActionType.CONNECT_NODES) {
             log.info("StackPane clicked. The node was chosen");
@@ -56,32 +57,43 @@ public class Controller implements Initializable {
             view.chooseNode(mouseEvent);
             return;
         }
+
         log.info("The second node was chosen");
+        Pane pane = view.addEdge(mouseEvent);
 
-        Group group = view.addEdge(mouseEvent);
-
-        if (group == null)
+        if (pane == null)
             return;
 
-        group.getChildren().get(2).setOnMouseClicked(this::weightClicked);
-        group.setPickOnBounds(false);
-        anchorPane.getChildren().add(group);
-        weightText = (Text) group.getChildren().get(2);
+        pane.getChildren().get(2).setOnMouseClicked(this::weightClicked);
+        pane.getChildren().get(0).setOnMouseClicked(this::lineClicked);
+        pane.setPickOnBounds(false);
+        anchorPane.getChildren().add(pane);
+        weightText = (Text) pane.getChildren().get(2);
         askWeight();
     }
 
+    public void lineClicked(MouseEvent mouseEvent) {
+        if (actionType == ActionType.DELETE) {
+            log.info("Removing the line");
+            view.removeNode((Line) mouseEvent.getSource());
+        }
+    }
+
     public void weightClicked(MouseEvent mouseEvent) {
-        if (actionType == ActionType.DELETE)
+        if (actionType == ActionType.DELETE) {
+            log.info("Removing the weight");
+            view.removeNode((Text) mouseEvent.getSource());
             return;
+        }
 
         log.info("Weight was clicked");
-        actionType = ActionType.CHANGE_WEIGHT;
         weightText = (Text) mouseEvent.getSource();
         askWeight();
     }
 
     public void askWeight() {
         log.info("Showing the weight window");
+        actionType = ActionType.CHANGE_WEIGHT;
         Stage stage = new Stage();
         stage.setOnHiding(this::weightWindowClosed);
         weightWindow = new WeightWindow();
@@ -100,7 +112,7 @@ public class Controller implements Initializable {
         view.clear();
     }
 
-    public void escapePressed() {
+    public void cancelSelection() {
         log.info("Escape button was pressed, clearing the choose of the node");
         actionType = ActionType.ADD_NODE;
     }

@@ -1,7 +1,8 @@
 package spbetu.prim.view;
 
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -42,11 +43,16 @@ public class GraphView {
         return stackPane;
     }
 
+    public void removeNode(Node node) {
+        Pane pane = (Pane) node.getParent();
+        pane.getChildren().remove(node);
+    }
+
     public void chooseNode(MouseEvent mouseEvent) {
         prevStackPane = (StackPane) mouseEvent.getSource();
     }
 
-    public Group addEdge(MouseEvent mouseEvent) {
+    public Pane addEdge(MouseEvent mouseEvent) {
         if (prevStackPane == null || prevStackPane == mouseEvent.getSource())
             return null;
 
@@ -57,7 +63,7 @@ public class GraphView {
                 " and " +
                 ((Text) currStackPane.getChildren().get(1)).getText());
 
-        Group group = new Group();
+        Pane pane = new Pane();
         Line line = new Line();
 
         line.startXProperty().bind(
@@ -77,7 +83,7 @@ public class GraphView {
                 prevStackPane.layoutYProperty().add(currStackPane.layoutYProperty()).divide(2));
         styleText(text);
 
-        group.getChildren().addAll(
+        pane.getChildren().addAll(
                 line,
                 prevStackPane,
                 text,
@@ -85,7 +91,7 @@ public class GraphView {
         );
 
         prevStackPane = null;
-        return group;
+        return pane;
     }
 
     public Circle getCircle() {

@@ -21,6 +21,7 @@ public class WeightWindow extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/weight_window.fxml"));
             Parent root = loader.load();
             primaryStage.setTitle("Enter the weight");
+
             Scene scene = new Scene(root);
             scene.setOnKeyPressed(this::keyPressed);
             primaryStage.setScene(scene);
