@@ -30,7 +30,7 @@ public class PrimApplication extends Application {
 
     private void keyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ESCAPE) {
-            controller.escapePressed();
+            controller.cancelSelection();
         }
     }
 
