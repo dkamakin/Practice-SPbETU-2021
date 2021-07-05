@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="225.0" prefWidth="261.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="spbetu.prim.controller.WeightWindowController">
+    <children>
+        <Button fx:id="doneButton" layoutX="45.0" layoutY="136.0" mnemonicParsing="false" onAction="#doneButtonPressed"
+                text="Done"/>
+        <Button fx:id="closeButton" layoutX="154.0" layoutY="136.0" mnemonicParsing="false"
+                onAction="#closeButtonPressed" text="Close"/>
+        <TextField fx:id="textField" layoutX="45.0" layoutY="100.0" prefHeight="26.0" prefWidth="163.0"/>
+        <Text layoutX="45.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please, enter the weight:"/>
+    </children>
+</AnchorPane>
