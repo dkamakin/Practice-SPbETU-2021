@@ -1,45 +1,22 @@
 package spbetu.prim.view;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.controller.WeightWindowController;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.TextInputDialog;
 
-@Slf4j
-public class WeightWindow extends Application {
+import java.util.Optional;
 
-    WeightWindowController controller;
+public class WeightWindow {
 
-    @Override
-    public void start(Stage primaryStage) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/weight_window.fxml"));
-            Parent root = loader.load();
-            primaryStage.setTitle("Enter the weight");
+    public String getWeight() {
+        Dialog<String> dialog = new TextInputDialog();
+        dialog.setTitle("Weight");
+        dialog.setHeaderText("Enter the weight: ");
+        Optional<String> result = dialog.showAndWait();
+        String entered = null;
 
-            Scene scene = new Scene(root);
-            scene.setOnKeyPressed(this::keyPressed);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            controller = loader.getController();
-        } catch (Exception e) {
-            log.error("Couldn't open the weight window: " + e.getMessage());
-        }
-    }
+        if (result.isPresent())
+            entered = result.get();
 
-    private void keyPressed(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            log.info("Enter button was pressed, setting up the weight");
-            controller.doneButtonPressed();
-        }
-    }
-
-    public String getText() {
-        return controller.getText();
+        return entered;
     }
 }
