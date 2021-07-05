@@ -35,46 +35,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="spbetu.prim.controller.Controller">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="spbetu.prim.controller.Controller">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="Action">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#clearClicked" text="Clear"/>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#deleteClicked" text="Delete an item"/>
+                        <MenuItem mnemonicParsing="false" onAction="#clearClicked" text="Clear" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#deleteClicked" text="Delete an item" />
+                  <MenuItem mnemonicParsing="false" onAction="#resetClicked" text="Reset" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Next step"/>
-                <Menu mnemonicParsing="false" text="Prev step"/>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About"/>
-                        <MenuItem mnemonicParsing="false" onAction="#faqClicked" text="FAQ"/>
+                        <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About" />
+                        <MenuItem mnemonicParsing="false" onAction="#faqClicked" text="FAQ" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Open"/>
-                    </items>
-                </Menu>
+                <Menu mnemonicParsing="false" text="File" />
+            <Menu mnemonicParsing="false" text="Algorithm">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#nextStepClicked" text="Next step" />
+                  <MenuItem mnemonicParsing="false" text="Prev step" />
+                  <MenuItem mnemonicParsing="false" onAction="#runClicked" text="Run" />
+              </items>
+            </Menu>
             </menus>
         </MenuBar>
-        <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" onMouseClicked="#anchorPaneClicked"
-                    prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+        <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" onMouseClicked="#anchorPaneClicked" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <AnchorPane fx:id="secondAnchorPane" layoutX="439.0" onMouseClicked="#scrollPaneClicked"
-                            prefHeight="375.0" prefWidth="201.0" AnchorPane.bottomAnchor="0.0"
-                            AnchorPane.leftAnchor="1000.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane fx:id="secondAnchorPane" layoutX="439.0" onMouseClicked="#scrollPaneClicked" prefHeight="375.0" prefWidth="201.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1000.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <ScrollPane fx:id="logTextArea" layoutX="1.0" layoutY="29.0" prefHeight="1312.0"
-                                    prefWidth="224.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0"/>
-                        <Button layoutX="100.0" layoutY="2.0" maxHeight="1.7976931348623157E308"
-                                maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                                onMouseClicked="#clearLoggingArea" text="Clear" AnchorPane.leftAnchor="100.0"
-                                AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="2.0"/>
+                        <ScrollPane fx:id="logTextArea" layoutX="1.0" layoutY="29.0" prefHeight="1312.0" prefWidth="224.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
+                        <Button layoutX="100.0" layoutY="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#clearLoggingArea" text="Clear" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="2.0" />
                     </children>
                 </AnchorPane>
             </children>

@@ -10,6 +10,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.control.ScrollPane;
 import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.model.*;
 import spbetu.prim.view.*;
 
 import java.net.URL;
@@ -28,6 +29,7 @@ public class Controller implements Initializable {
     public AnchorPane secondAnchorPane;
 
     private GraphView view;
+    private Graph graph;
     private ActionType actionType;
     private boolean scrollPaneClickedFlag;
 
@@ -35,6 +37,7 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         view = new GraphView(new ScrollPaneLog(logTextArea));
         actionType = ActionType.ADD_NODE;
+        graph = new Graph();
     }
 
     public void anchorPaneClicked(MouseEvent mouseEvent) {
@@ -75,6 +78,14 @@ public class Controller implements Initializable {
         anchorPane.getChildren().add(pane);
         Text weightText = (Text) pane.getChildren().get(2);
         weightText.setText(askWeight());
+        addEdgeToGraph(pane);
+    }
+
+    public void addEdgeToGraph(Pane pane) {
+        Text text = (Text) pane.getChildren().get(2);
+        StackPane firstNode = (StackPane) pane.getChildren().get(1);
+        StackPane secondNode = (StackPane) pane.getChildren().get(3);
+        graph.addNewEdge(view.getNodeId(firstNode), view.getNodeId(secondNode), Integer.parseInt(text.getText()));
     }
 
     public void lineClicked(MouseEvent mouseEvent) {
@@ -104,8 +115,9 @@ public class Controller implements Initializable {
     }
 
     public void clearClicked() {
-        System.out.println("Clearing the scene");
+        log.info("Clearing the scene");
         anchorPane.getChildren().remove(1, anchorPane.getChildren().size());
+        graph.graphStartAgain();
         view.clear();
     }
 
@@ -129,6 +141,9 @@ public class Controller implements Initializable {
     }
 
     public void cancelSelection() {
+        if (actionType != ActionType.CONNECT_NODES)
+            return;
+
         log.info("Escape button was pressed, clearing the choose of the node");
         actionType = ActionType.ADD_NODE;
     }
@@ -141,5 +156,34 @@ public class Controller implements Initializable {
     public void faqClicked() {
         log.info("FAQ clicked");
         new FAQWindow().show();
+    }
+
+    public void nextStepClicked() {
+        log.info("Next step in algorithm");
+        Edge edge = graph.runAlgorithmByStep();
+
+        if (edge == null || edge.getVertexTo() == null || edge.getVertexFrom() == null) {
+            new InfoWindow().show("The minimum spanning tree was found");
+            return;
+        }
+
+        view.addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
+    }
+
+    public void runClicked() {
+        log.info("Run algorithm");
+        Edge edge;
+
+        while ((edge = graph.runAlgorithmByStep()) != null
+                && edge.getVertexFrom() != null && edge.getVertexTo() != null)
+            view.addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
+
+        new InfoWindow().show("The minimum spinning tree was found");
+    }
+
+    public void resetClicked() {
+        log.info("Reset the algorithm");
+        view.resetGraph();
+        graph.graphStartAgain();
     }
 }

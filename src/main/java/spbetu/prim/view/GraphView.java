@@ -11,6 +11,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 public class GraphView {
 
@@ -18,10 +21,13 @@ public class GraphView {
     private ScrollPaneLog scrollPaneLog;
     private StackPane prevStackPane;
 
+    private List<EdgeView> edges;
+
     public GraphView(ScrollPaneLog scrollPane) {
         scrollPaneLog = scrollPane;
         currId = 0;
         prevStackPane = null;
+        edges = new ArrayList<>();
     }
 
     public void clear() {
@@ -99,8 +105,52 @@ public class GraphView {
                 currStackPane
         );
 
+        edges.add(new EdgeView(prevStackPane, currStackPane, line));
         prevStackPane = null;
         return pane;
+    }
+
+    public void addEdgeToTree(int firstNode, int secondNode, int weight) {
+        log.info("Adding an edge to the three: ({}) - ({}), weight: {}",
+                firstNode, secondNode, weight);
+
+        for (EdgeView elem : edges) {
+            StackPane first = elem.getFrom();
+            StackPane second = elem.getTo();
+            if (firstNode == getNodeId(first) && secondNode == getNodeId(second)) {
+                log.info("Found edge in view");
+                Color color = Color.BLUE;
+                paintCircle(first, color);
+                paintCircle(second, color);
+                paintLine(elem.getLine(), color, 3);
+                return;
+            }
+        }
+
+        log.info("Didn't find the edge in view");
+    }
+
+    public void paintCircle(StackPane stackPane, Color color) {
+        Circle circle = (Circle) stackPane.getChildren().get(0);
+        circle.setFill(color);
+    }
+
+    public void paintLine(Line line, Color color, int width) {
+        line.setStrokeWidth(width);
+        line.setStroke(color);
+    }
+
+    public int getNodeId(StackPane stackPane) {
+        Text text = (Text) stackPane.getChildren().get(1);
+        return Integer.parseInt(text.getText());
+    }
+
+    public void resetGraph() {
+        for (EdgeView elem : edges) {
+            paintCircle(elem.getFrom(), Color.ORCHID);
+            paintCircle(elem.getTo(), Color.ORCHID);
+            paintLine(elem.getLine(), Color.BLACK, 1);
+        }
     }
 
     public Circle getCircle() {
