@@ -1,6 +1,5 @@
 package spbetu.prim.view;
 
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -32,7 +31,6 @@ public class GraphView {
     }
 
     public StackPane addNode(MouseEvent mouseEvent) {
-        System.out.println("Mouse click detected");
         scrollPaneLog.addNodeMessage(Integer.toString(currId));
 
         StackPane stackPane = new StackPane();
@@ -50,13 +48,17 @@ public class GraphView {
         return stackPane;
     }
 
-    public void stackPaneClicked(MouseEvent mouseEvent) {
-        System.out.println("Stack pane clicked");
+    public void chooseNode(MouseEvent mouseEvent) {
         prevStackPane = (StackPane) mouseEvent.getSource();
         scrollPaneLog.nodeClickedMessage(((Text)prevStackPane.getChildren().get(1)).getText());
     }
 
-    public Group addEdge(MouseEvent mouseEvent) {
+    public void removeNode(Node node) {
+        Pane pane = (Pane) node.getParent();
+        pane.getChildren().remove(node);
+    }
+
+    public Pane addEdge(MouseEvent mouseEvent) {
         if (prevStackPane == null || prevStackPane == mouseEvent.getSource())
             return null;
 
@@ -65,12 +67,12 @@ public class GraphView {
         scrollPaneLog.addEdgeMessage(((Text)prevStackPane.getChildren().get(1)).getText(),
                 ((Text)currStackPane.getChildren().get(1)).getText());
 
-        System.out.println("Drawing a line between nodes " +
+        log.info("Drawing a line between nodes " +
                 ((Text) prevStackPane.getChildren().get(1)).getText() +
                 " and " +
                 ((Text) currStackPane.getChildren().get(1)).getText());
 
-        Group group = new Group();
+        Pane pane = new Pane();
         Line line = new Line();
 
         line.startXProperty().bind(
@@ -90,7 +92,7 @@ public class GraphView {
                 prevStackPane.layoutYProperty().add(currStackPane.layoutYProperty()).divide(2));
         styleText(text);
 
-        group.getChildren().addAll(
+        pane.getChildren().addAll(
                 line,
                 prevStackPane,
                 text,
@@ -98,7 +100,7 @@ public class GraphView {
         );
 
         prevStackPane = null;
-        return group;
+        return pane;
     }
 
     public Circle getCircle() {

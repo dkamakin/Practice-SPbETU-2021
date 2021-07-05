@@ -1,6 +1,6 @@
 package spbetu.prim.model;
 
-class Edge  { // вес может быть числом или Character
+class Edge { // вес может быть числом или Character
     private Integer weight;
     private boolean included = false;
 

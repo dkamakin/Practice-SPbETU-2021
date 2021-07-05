@@ -2,12 +2,11 @@ package spbetu.prim.model;
 
 import java.util.*;
 
-
-public class Graph  {
-    ArrayList <Vertex> graph; // массив вершин (у каждой вершины номер и словарь ребер)
+public class Graph {
+    ArrayList<Vertex> graph; // массив вершин (у каждой вершины номер и словарь ребер)
 
     Graph() {
-        graph = new ArrayList <Vertex>();
+        graph = new ArrayList<Vertex>();
     }
 
     public void clearGraph() {    //для очистки данных графа, полностью новый ввод
@@ -15,7 +14,7 @@ public class Graph  {
     }
 
     public void graphStartAgain() {
-        for (Vertex vertex: graph) {
+        for (Vertex vertex : graph) {
             vertex.setVisited(false); // // теперь вершина не посещенная
             Set<HashMap.Entry<Vertex, Edge>> set = vertex.edges.entrySet();
             for (HashMap.Entry<Vertex, Edge> me : set)
@@ -25,7 +24,7 @@ public class Graph  {
 
     public Graph cloneGraph() {                                // клонирование графа (на всякий случай)))
         Graph clone = new Graph();
-        for (Vertex vertex: graph){
+        for (Vertex vertex : graph) {
             Vertex vertexClone = new Vertex(vertex.number);
             clone.graph.add(vertexClone);
         }
@@ -48,8 +47,7 @@ public class Graph  {
         if (graph.size() > 0) {
             graph.get(0).setVisited(true);  // посещаем первую вершину
             System.out.println(graph.get(0).number + " vertex was visited");
-        }
-        else
+        } else
             return;
 
         while (isDisconnected()) { // пока есть не посещенная вершина (должны в итоге посетить все вершины)
@@ -62,8 +60,7 @@ public class Graph  {
         if (graph.size() > 0) {
             graph.get(0).setVisited(true);  // посещаем первую вершину
             System.out.println(graph.get(0).number + " vertex was visited");
-        }
-        else
+        } else
             return null;
 
         Edge nextMinimumEdge = new Edge(Integer.MAX_VALUE, null, null); // для минимального ребра
@@ -93,7 +90,7 @@ public class Graph  {
 
         nextMinimumEdge.setIncluded(true);  // ребро включили
         nextVertex.setVisited(true); // вершину посетили
-        System.out.println("In result added edge " + nextVertexNumber + " to " +  nextVertex.number + " with weight " + nextMinimumEdge.getWeight());
+        System.out.println("In result added edge " + nextVertexNumber + " to " + nextVertex.number + " with weight " + nextMinimumEdge.getWeight());
         System.out.println(nextVertex.number + " vertex was visited");
 
         return nextMinimumEdge;
@@ -110,7 +107,7 @@ public class Graph  {
     }
 
     private int indexVertex(int number) {
-        for (Vertex vertex : graph){
+        for (Vertex vertex : graph) {
             if (vertex.number == number)
                 return graph.indexOf(vertex);
         }
@@ -166,8 +163,7 @@ public class Graph  {
                 edge12 = console.nextInt();
                 if (edge12 > 32000)   // костыль
                     return null;
-            }
-            else {
+            } else {
                 console.next();
                 System.out.println("Wrong weight");
                 return null;
