@@ -13,7 +13,7 @@ class Pair {  // класс пары вершина-ребро
     }
 }
 
-class Vertex {  // класс ребра
+public class Vertex {  // класс ребра
     int number;
     HashMap<Vertex, Edge> edges;
     private boolean visited;
@@ -51,5 +51,9 @@ class Vertex {  // класс ребра
         }
 
         return new Pair(nextVertex, nextMinimum);
+    }
+
+    public int getNumber() {
+        return number;
     }
 }

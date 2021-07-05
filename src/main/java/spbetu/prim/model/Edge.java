@@ -1,6 +1,6 @@
 package spbetu.prim.model;
 
-class Edge { // вес может быть числом или Character
+public class Edge { // вес может быть числом или Character
     private Integer weight;
     private boolean included = false;
 
@@ -14,7 +14,7 @@ class Edge { // вес может быть числом или Character
         vertexTo = to;
     }
 
-    Integer getWeight() {
+    public Integer getWeight() {
         return weight;  //возвращает вес-число
     }
 
@@ -26,9 +26,17 @@ class Edge { // вес может быть числом или Character
         included = flag;
     }
 
-    Vertex getVertexTo() {
+    public Vertex vertexTo() {
         if (!vertexTo.isVisited())
             return vertexTo;
         return null;
+    }
+
+    public Vertex getVertexFrom() {
+        return vertexFrom;
+    }
+
+    public Vertex getVertexTo() {
+        return vertexTo;
     }
 }

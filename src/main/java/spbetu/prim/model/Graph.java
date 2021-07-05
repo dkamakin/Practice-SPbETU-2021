@@ -1,12 +1,15 @@
 package spbetu.prim.model;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 
+@Slf4j
 public class Graph {
     ArrayList<Vertex> graph; // массив вершин (у каждой вершины номер и словарь ребер)
 
-    Graph() {
-        graph = new ArrayList<Vertex>();
+    public Graph() {
+        graph = new ArrayList<>();
     }
 
     public void clearGraph() {    //для очистки данных графа, полностью новый ввод
@@ -32,6 +35,7 @@ public class Graph {
     }
 
     public Edge addNewEdge(int indexVertex1, int indexVertex2, int edge12) { // две вершинки и вес
+        log.info("Adding edge from {} to {} with weight {}", indexVertex1, indexVertex2, edge12);
         checkIndex(indexVertex1); // добавляем вершину в граф, если она встречается первый раз
         checkIndex(indexVertex2);
         Vertex to = graph.get(indexVertex(indexVertex1));
@@ -39,14 +43,14 @@ public class Graph {
         Edge edge = new Edge(edge12, to, from); // в принципе, не важно откуда куда, так как граф не направленный
         to.vertexAddEdge(from, edge);
         from.vertexAddEdge(to, edge);
-        System.out.println("Created edge");
+        log.info("Created edge");
         return edge;
     }
 
     public void runAlgorithm() {
         if (graph.size() > 0) {
             graph.get(0).setVisited(true);  // посещаем первую вершину
-            System.out.println(graph.get(0).number + " vertex was visited");
+            log.info(graph.get(0).number + " vertex was visited");
         } else
             return;
 
@@ -59,7 +63,7 @@ public class Graph {
     public Edge runAlgorithmByStep() {
         if (graph.size() > 0) {
             graph.get(0).setVisited(true);  // посещаем первую вершину
-            System.out.println(graph.get(0).number + " vertex was visited");
+            log.info(graph.get(0).number + " vertex was visited");
         } else
             return null;
 
@@ -72,7 +76,7 @@ public class Graph {
         for (Vertex vertex : graph) { // рассматриваем все вершины графа
 
             if (vertex.isVisited()) {  // если вершина не посещена
-                System.out.println("Looking at edges of " + vertex.number + " vertex");
+                log.info("Looking at edges of " + vertex.number + " vertex");
                 Pair candidate = vertex.getMinimum();  // выбираем вершину с минимальным ребром
                 if (candidate.edge.getWeight() < nextMinimumEdge.getWeight()) {
                     nextMinimumEdge = candidate.edge;
@@ -82,7 +86,7 @@ public class Graph {
             }
 
             try {                                   // здесь таймер для отображения
-                Thread.sleep(900);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -90,8 +94,8 @@ public class Graph {
 
         nextMinimumEdge.setIncluded(true);  // ребро включили
         nextVertex.setVisited(true); // вершину посетили
-        System.out.println("In result added edge " + nextVertexNumber + " to " + nextVertex.number + " with weight " + nextMinimumEdge.getWeight());
-        System.out.println(nextVertex.number + " vertex was visited");
+        log.info("In result added edge " + nextVertexNumber + " to " + nextVertex.number + " with weight " + nextMinimumEdge.getWeight());
+        log.info(nextVertex.number + " vertex was visited");
 
         return nextMinimumEdge;
     }
@@ -117,7 +121,7 @@ public class Graph {
     private void checkIndex(int indexVertex) {
         if (indexVertex(indexVertex) < 0) {
             graph.add(new Vertex(indexVertex));
-            System.out.println("Added new vertex with number " + indexVertex);
+            log.info("Added new vertex with number " + indexVertex);
         }
     }
 
@@ -129,7 +133,7 @@ public class Graph {
             // но такая штука не актуальна, если вводим через интерфейс
             newEdge = addNewEdgeFromConsole();
             if (newEdge == null) {
-                System.out.println("Mistake of entering!");
+                log.info("Mistake of entering!");
                 return;
             }
         }
@@ -147,14 +151,14 @@ public class Graph {
             dash = console.next();
 
             if (!dash.equals("-")) {
-                System.out.println("Between vertexes you need to enter \"-\"");
+                log.info("Between vertexes you need to enter \"-\"");
                 return null;
             }
 
             if (console.hasNextInt()) {
                 indexVertex2 = console.nextInt();
             } else {
-                System.out.println("Mistake of reading the second vertex");
+                log.info("Mistake of reading the second vertex");
                 return null;
             }
 
@@ -165,7 +169,7 @@ public class Graph {
                     return null;
             } else {
                 console.next();
-                System.out.println("Wrong weight");
+                log.info("Wrong weight");
                 return null;
             }
 

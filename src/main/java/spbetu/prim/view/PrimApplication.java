@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -25,6 +26,7 @@ public class PrimApplication extends Application {
         Scene scene = new Scene(root, 1000, 700);
         scene.setOnKeyPressed(this::keyPressed);
         primaryStage.setScene(scene);
+        primaryStage.getIcons().add(new Image("/icon.jpeg"));
         primaryStage.show();
     }
 
