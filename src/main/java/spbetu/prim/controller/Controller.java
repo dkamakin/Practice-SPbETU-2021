@@ -1,5 +1,7 @@
 package spbetu.prim.controller;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
@@ -174,12 +176,32 @@ public class Controller implements Initializable {
 
     public void runClicked() {
         log.info("Run algorithm");
-        Edge edge;
 
-        while ((edge = graph.runAlgorithmByStep()) != null
-                && edge.getVertexFrom() != null && edge.getVertexTo() != null)
-            view.addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                Edge edge;
+                while ((edge = graph.runAlgorithmByStep()) != null
+                        && edge.getVertexFrom() != null && edge.getVertexTo() != null) {
+                    view.addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
 
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        log.info("Couldn't stop the thread: " + e.getMessage());
+                    }
+
+                }
+
+                return null;
+            }
+        };
+
+        new Thread(task).start();
+        task.setOnSucceeded(this::doneRun);
+    }
+
+    private void doneRun(WorkerStateEvent workerStateEvent) {
         new InfoWindow().show("The minimum spinning tree was found");
     }
 
