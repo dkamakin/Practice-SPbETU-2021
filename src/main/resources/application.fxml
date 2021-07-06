@@ -39,27 +39,13 @@
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
-                <Menu mnemonicParsing="false" text="Action">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#clearClicked" text="Clear" />
-                        <RadioMenuItem mnemonicParsing="false" onAction="#deleteClicked" text="Delete an item" />
-                  <MenuItem mnemonicParsing="false" onAction="#resetClicked" text="Reset" />
-                    </items>
-                </Menu>
+                <Menu mnemonicParsing="false" text="File" />
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About" />
                         <MenuItem mnemonicParsing="false" onAction="#faqClicked" text="FAQ" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="File" />
-            <Menu mnemonicParsing="false" text="Algorithm">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#nextStepClicked" text="Next step" />
-                  <MenuItem mnemonicParsing="false" text="Prev step" />
-                  <MenuItem mnemonicParsing="false" onAction="#runClicked" text="Run" />
-              </items>
-            </Menu>
             </menus>
         </MenuBar>
         <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" onMouseClicked="#anchorPaneClicked" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
@@ -70,6 +56,16 @@
                         <Button layoutX="100.0" layoutY="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#clearLoggingArea" text="Clear" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="2.0" />
                     </children>
                 </AnchorPane>
+            <ToolBar prefHeight="19.0" prefWidth="999.0">
+              <items>
+                <Button mnemonicParsing="false" onAction="#prevStepClicked" text="Prev step" />
+                  <Button mnemonicParsing="false" onAction="#nextStepClicked" text="Next step" />
+                  <Button mnemonicParsing="false" onAction="#runClicked" text="Run" />
+                  <Button mnemonicParsing="false" onAction="#resetClicked" text="Reset" />
+                  <Button mnemonicParsing="false" onAction="#clearClicked" text="Clear" />
+                  <CheckBox mnemonicParsing="false" onAction="#deleteClicked" text="Delete" />
+              </items>
+            </ToolBar>
             </children>
         </AnchorPane>
     </children>

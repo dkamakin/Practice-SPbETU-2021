@@ -84,12 +84,6 @@ public class Graph {
                     nextVertexNumber = vertex.number;
                 }
             }
-
-            try {                                   // здесь таймер для отображения
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
         nextMinimumEdge.setIncluded(true);  // ребро включили
