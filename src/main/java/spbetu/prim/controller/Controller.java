@@ -67,7 +67,7 @@ public class Controller implements Initializable {
         }
 
         log.info("The second node was chosen");
-        Pane pane = view.addEdge(mouseEvent);
+        Pane pane = view.addEdge(mouseEvent, askWeight());
 
         if (pane == null)
             return;
@@ -76,8 +76,6 @@ public class Controller implements Initializable {
         pane.getChildren().get(0).setOnMouseClicked(this::lineClicked);
         pane.setPickOnBounds(false);
         anchorPane.getChildren().add(pane);
-        Text weightText = (Text) pane.getChildren().get(2);
-        weightText.setText(askWeight());
         addEdgeToGraph(pane);
     }
 
@@ -105,7 +103,11 @@ public class Controller implements Initializable {
 
         log.info("Weight was clicked");
         Text weightText = (Text) mouseEvent.getSource();
-        weightText.setText(askWeight());
+        String newWeight = askWeight();
+        if (view.checkWeight(newWeight))
+            weightText.setText(askWeight());
+        else
+            log.warn("Wrong weight");
     }
 
     public String askWeight() {
@@ -116,7 +118,7 @@ public class Controller implements Initializable {
 
     public void clearClicked() {
         log.info("Clearing the scene");
-        anchorPane.getChildren().remove(1, anchorPane.getChildren().size());
+        anchorPane.getChildren().remove(2, anchorPane.getChildren().size());
         graph.graphStartAgain();
         view.clear();
     }
@@ -185,5 +187,9 @@ public class Controller implements Initializable {
         log.info("Reset the algorithm");
         view.resetGraph();
         graph.graphStartAgain();
+    }
+
+    public void prevStepClicked() {
+        log.info("Prev step clicked");
     }
 }

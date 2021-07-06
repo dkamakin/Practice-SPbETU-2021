@@ -64,8 +64,12 @@ public class GraphView {
         pane.getChildren().remove(node);
     }
 
-    public Pane addEdge(MouseEvent mouseEvent) {
-        if (prevStackPane == null || prevStackPane == mouseEvent.getSource())
+    public boolean checkWeight(String weight) {
+        return !weight.isEmpty();
+    }
+
+    public Pane addEdge(MouseEvent mouseEvent, String weight) {
+        if (prevStackPane == null || prevStackPane == mouseEvent.getSource() || !checkWeight(weight))
             return null;
 
         StackPane currStackPane = (StackPane) mouseEvent.getSource();
@@ -91,7 +95,7 @@ public class GraphView {
         line.endYProperty().bind(
                 currStackPane.layoutYProperty().add(currStackPane.getBoundsInParent().getHeight() / 2.0));
 
-        Text text = new Text();
+        Text text = new Text(weight);
         text.xProperty().bind(
                 prevStackPane.layoutXProperty().add(currStackPane.layoutXProperty()).divide(2));
         text.yProperty().bind(
