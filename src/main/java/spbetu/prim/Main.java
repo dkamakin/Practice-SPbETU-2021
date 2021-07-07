@@ -1,6 +1,6 @@
 package spbetu.prim;
 
-import spbetu.prim.view.PrimApplication;
+import spbetu.prim.viewmodel.PrimApplication;
 
 public class Main {
 
