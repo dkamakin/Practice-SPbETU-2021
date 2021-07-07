@@ -1,7 +1,5 @@
-package spbetu.prim.controller;
+package spbetu.prim.view;
 
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
@@ -13,14 +11,17 @@ import javafx.scene.text.Text;
 import javafx.scene.control.ScrollPane;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.loggers.GraphLogger;
-import spbetu.prim.model.*;
-import spbetu.prim.view.*;
+import spbetu.prim.viewmodel.*;
+import spbetu.prim.window.AboutWindow;
+import spbetu.prim.window.FAQWindow;
+import spbetu.prim.window.InfoWindow;
+import spbetu.prim.window.WeightWindow;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 @Slf4j
-public class Controller implements Initializable {
+public class View implements Initializable {
 
     @FXML
     private AnchorPane anchorPane;
@@ -31,8 +32,7 @@ public class Controller implements Initializable {
     @FXML
     public AnchorPane secondAnchorPane;
 
-    private GraphView view;
-    private Graph graph;
+    private GraphView viewModel;
     private ActionType actionType;
     private boolean scrollPaneClickedFlag;
     private ScrollPaneLog scrollPaneLog;
@@ -40,13 +40,11 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        view = new GraphView();
+        viewModel = new GraphView();
         actionType = ActionType.ADD_NODE;
 
         scrollPaneLog = new ScrollPaneLog(logTextArea); //ScrollPane - Вывод информации на окно с логами
         graphLogger = new GraphLogger(scrollPaneLog);   // Добавление через ScrollPane информации о графе
-
-        graph = new Graph(graphLogger);
     }
 
     public void anchorPaneClicked(MouseEvent mouseEvent) {
@@ -55,7 +53,7 @@ public class Controller implements Initializable {
             scrollPaneClickedFlag = false;
         } else if (actionType == ActionType.ADD_NODE) {
             log.info("Adding a node");
-            StackPane stackPane = view.addNode(mouseEvent);
+            StackPane stackPane = viewModel.addNode(mouseEvent);
             anchorPane.getChildren().add(stackPane);
             stackPane.setOnMouseClicked(this::stackPaneClicked);
         } else if (actionType == ActionType.CHANGE_WEIGHT) {
@@ -66,17 +64,17 @@ public class Controller implements Initializable {
     public void stackPaneClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the stackPane");
-            view.removeNode((StackPane) mouseEvent.getSource());
+            viewModel.removeNode((StackPane) mouseEvent.getSource());
             return;
         } else if (actionType != ActionType.CONNECT_NODES) {
             log.info("StackPane clicked. The node was chosen");
             actionType = ActionType.CONNECT_NODES;
-            view.chooseNode(mouseEvent);
+            viewModel.chooseNode(mouseEvent);
             return;
         }
 
         log.info("The second node was chosen");
-        Pane pane = view.addEdge(mouseEvent, askWeight());
+        Pane pane = viewModel.addEdge(mouseEvent, askWeight());
 
         if (pane == null)
             return;
@@ -85,36 +83,28 @@ public class Controller implements Initializable {
         pane.getChildren().get(0).setOnMouseClicked(this::lineClicked);
         pane.setPickOnBounds(false);
         anchorPane.getChildren().add(pane);
-        addEdgeToGraph(pane);
-    }
-
-    public void addEdgeToGraph(Pane pane) {
-        Text text = (Text) pane.getChildren().get(2);
-        StackPane firstNode = (StackPane) pane.getChildren().get(1);
-        StackPane secondNode = (StackPane) pane.getChildren().get(3);
-        graph.addNewEdge(view.getNodeId(firstNode), view.getNodeId(secondNode), Integer.parseInt(text.getText()));
     }
 
     public void lineClicked(MouseEvent mouseEvent) {
         log.info("Line was clicked");
         if (actionType == ActionType.DELETE) {
             log.info("Removing the line");
-            view.removeNode((Line) mouseEvent.getSource());
+            viewModel.removeNode((Line) mouseEvent.getSource());
         }
     }
 
     public void weightClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the weight");
-            view.removeNode((Text) mouseEvent.getSource());
+            viewModel.removeNode((Text) mouseEvent.getSource());
             return;
         }
 
         log.info("Weight was clicked");
         Text weightText = (Text) mouseEvent.getSource();
         String newWeight = askWeight();
-        if (view.checkWeight(newWeight))
-            weightText.setText(askWeight());
+        if (viewModel.checkWeight(newWeight))
+            weightText.setText(newWeight);
         else
             log.warn("Wrong weight");
     }
@@ -128,8 +118,7 @@ public class Controller implements Initializable {
     public void clearClicked() {
         log.info("Clearing the scene");
         anchorPane.getChildren().remove(2, anchorPane.getChildren().size());
-        graph.graphStartAgain();
-        view.clear();
+        viewModel.clear();
     }
 
     public void deleteClicked() {
@@ -171,54 +160,26 @@ public class Controller implements Initializable {
 
     public void nextStepClicked() {
         log.info("Next step in algorithm");
-        Edge edge = graph.runAlgorithmByStep();
-
-        if (edge == null || edge.getVertexTo() == null || edge.getVertexFrom() == null) {
+        if (viewModel.nextStep())
             new InfoWindow().show("The minimum spanning tree was found");
-            return;
-        }
-
-        view.addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
     }
 
     public void runClicked() {
         log.info("Run algorithm");
-
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                Edge edge;
-                while ((edge = graph.runAlgorithmByStep()) != null
-                        && edge.getVertexFrom() != null && edge.getVertexTo() != null) {
-                    view.addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-                        log.info("Couldn't stop the thread: " + e.getMessage());
-                    }
-
-                }
-
-                return null;
-            }
-        };
-
-        new Thread(task).start();
-        task.setOnSucceeded(this::doneRun);
-    }
-
-    private void doneRun(WorkerStateEvent workerStateEvent) {
-        new InfoWindow().show("The minimum spinning tree was found");
+        viewModel.runAlgorithm();
     }
 
     public void resetClicked() {
         log.info("Reset the algorithm");
-        view.resetGraph();
-        graph.graphStartAgain();
+        viewModel.resetGraph();
     }
 
     public void prevStepClicked() {
         log.info("Prev step clicked");
+    }
+
+    public void stopPressed() {
+        log.info("Stop algorithm");
+        viewModel.stopAlgorithm();
     }
 }

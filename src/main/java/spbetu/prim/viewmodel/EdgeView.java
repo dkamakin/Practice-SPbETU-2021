@@ -1,4 +1,4 @@
-package spbetu.prim.view;
+package spbetu.prim.viewmodel;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;

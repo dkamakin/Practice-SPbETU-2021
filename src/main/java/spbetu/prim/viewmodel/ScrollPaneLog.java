@@ -1,4 +1,4 @@
-package spbetu.prim.view;
+package spbetu.prim.viewmodel;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Font;

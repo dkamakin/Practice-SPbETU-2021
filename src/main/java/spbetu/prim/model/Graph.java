@@ -1,27 +1,22 @@
 package spbetu.prim.model;
 
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.GraphLogger;
 
 import java.util.*;
 
 @Slf4j
 public class Graph {
     ArrayList<Vertex> graph; // массив вершин (у каждой вершины номер и словарь ребер)
-    private GraphLogger graphLogger;
 
-    public Graph(GraphLogger graphLog) {
-        graphLogger = graphLog;
+    public Graph() {
         graph = new ArrayList<>();
     }
 
     public void clearGraph() {    //для очистки данных графа, полностью новый ввод
-        graphLogger.clearingGraphMessage();
         graph.clear();
     }
 
     public void graphStartAgain() {
-        graphLogger.startAlgorithmAgainMessage();
         for (Vertex vertex : graph) {
             vertex.setVisited(false); // // теперь вершина не посещенная
             Set<HashMap.Entry<Vertex, Edge>> set = vertex.edges.entrySet();
@@ -31,7 +26,7 @@ public class Graph {
     }
 
     public Graph cloneGraph() {                                // клонирование графа (на всякий случай)))
-        Graph clone = new Graph(graphLogger);
+        Graph clone = new Graph();
         for (Vertex vertex : graph) {
             Vertex vertexClone = new Vertex(vertex.number);
             clone.graph.add(vertexClone);
@@ -49,7 +44,6 @@ public class Graph {
         to.vertexAddEdge(from, edge);
         from.vertexAddEdge(to, edge);
         log.info("Created edge");
-        graphLogger.addEdgeMessage(indexVertex1, indexVertex2, edge12);
         return edge;
     }
 
@@ -57,7 +51,6 @@ public class Graph {
         if (graph.size() > 0) {
             graph.get(0).setVisited(true);  // посещаем первую вершину
             log.info(graph.get(0).number + " vertex was visited");
-            graphLogger.setVisitedNodeMessage(graph.get(0).number);
         } else
             return;
 
@@ -71,7 +64,6 @@ public class Graph {
         if (graph.size() > 0) {
             graph.get(0).setVisited(true);  // посещаем первую вершину
             log.info(graph.get(0).number + " vertex was visited");
-            graphLogger.setVisitedNodeMessage(graph.get(0).number);
         } else
             return null;
 
@@ -98,8 +90,6 @@ public class Graph {
         nextVertex.setVisited(true); // вершину посетили
         log.info("In result added edge " + nextVertexNumber + " to " + nextVertex.number + " with weight " + nextMinimumEdge.getWeight());
         log.info(nextVertex.number + " vertex was visited");
-        graphLogger.setVisitedEdgeMessage(nextVertexNumber, nextVertex.number, nextMinimumEdge.getWeight());
-        graphLogger.setVisitedNodeMessage(nextVertex.number);
 
         return nextMinimumEdge;
     }
@@ -126,7 +116,6 @@ public class Graph {
         if (indexVertex(indexVertex) < 0) {
             graph.add(new Vertex(indexVertex));
             log.info("Added new vertex with number " + indexVertex);
-            graphLogger.addNodeMessage(indexVertex);
         }
     }
 

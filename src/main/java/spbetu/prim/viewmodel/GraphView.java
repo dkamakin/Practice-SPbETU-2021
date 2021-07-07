@@ -1,5 +1,6 @@
-package spbetu.prim.view;
+package spbetu.prim.viewmodel;
 
+import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -10,6 +11,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.model.Edge;
+import spbetu.prim.model.Graph;
+import spbetu.prim.window.InfoWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +24,25 @@ public class GraphView {
     private int currId;
     private StackPane prevStackPane;
 
-    private List<EdgeView> edges;
+    private final List<EdgeView> edges;
+    private final Graph graph;
+    private AlgorithmTask algorithmTask;
 
     public GraphView() {
         currId = 0;
         prevStackPane = null;
         edges = new ArrayList<>();
+        graph = new Graph();
+        algorithmTask = null;
     }
 
     public void clear() {
         currId = 0;
         prevStackPane = null;
+        graph.graphStartAgain();
     }
 
     public StackPane addNode(MouseEvent mouseEvent) {
-
         StackPane stackPane = new StackPane();
         Circle circle = getCircle();
 
@@ -57,6 +65,34 @@ public class GraphView {
     public void removeNode(Node node) {
         Pane pane = (Pane) node.getParent();
         pane.getChildren().remove(node);
+    }
+
+    public boolean nextStep() {
+        Edge edge = graph.runAlgorithmByStep();
+
+        if (edge == null || edge.getVertexTo() == null || edge.getVertexFrom() == null)
+            return true;
+
+        addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
+        return false;
+    }
+
+    public void runAlgorithm() {
+        algorithmTask = new AlgorithmTask(this);
+        algorithmTask.setOnSucceeded(this::doneRun);
+        new Thread(algorithmTask).start();
+    }
+
+    public void stopAlgorithm() {
+        log.info("Stop");
+        algorithmTask.setAlive(false);
+    }
+
+    private void doneRun(WorkerStateEvent workerStateEvent) {
+        if (algorithmTask.isAlive())
+            new InfoWindow().show("The minimum spanning tree was found");
+        else
+            new InfoWindow().show("The algorithm was stopped by user");
     }
 
     public boolean checkWeight(String weight) {
@@ -102,19 +138,20 @@ public class GraphView {
         );
 
         edges.add(new EdgeView(prevStackPane, currStackPane, line));
+        graph.addNewEdge(getNodeId(prevStackPane), getNodeId(currStackPane), Integer.parseInt(text.getText()));
         prevStackPane = null;
         return pane;
     }
 
     public void addEdgeToTree(int firstNode, int secondNode, int weight) {
-        log.info("Adding an edge to the three: ({}) - ({}), weight: {}",
+        log.info("Adding an edge to the tree: ({}) - ({}), weight: {}",
                 firstNode, secondNode, weight);
 
         for (EdgeView elem : edges) {
             StackPane first = elem.getFrom();
             StackPane second = elem.getTo();
             if (firstNode == getNodeId(first) && secondNode == getNodeId(second)) {
-                log.info("Found edge in view");
+                log.info("Found the edge in the list of edgeview");
                 Color color = Color.BLUE;
                 paintCircle(first, color);
                 paintCircle(second, color);
@@ -123,7 +160,7 @@ public class GraphView {
             }
         }
 
-        log.info("Didn't find the edge in view");
+        log.info("Didn't find the edge in the list of edgeview");
     }
 
     public void paintCircle(StackPane stackPane, Color color) {
@@ -147,6 +184,8 @@ public class GraphView {
             paintCircle(elem.getTo(), Color.ORCHID);
             paintLine(elem.getLine(), Color.BLACK, 1);
         }
+
+        graph.graphStartAgain();
     }
 
     public Circle getCircle() {
@@ -161,8 +200,7 @@ public class GraphView {
         text.setStyle(
                 "-fx-font-family: \"Times New Roman\";" +
                         "-fx-font-style: italic;" +
-                        "-fx-font-size: 26px;"
+                        "-fx-font-size: 22px;"
         );
     }
-
 }

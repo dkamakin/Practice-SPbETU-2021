@@ -1,4 +1,4 @@
-package spbetu.prim.view;
+package spbetu.prim.window;
 
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextInputDialog;

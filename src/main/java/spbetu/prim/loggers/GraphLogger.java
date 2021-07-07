@@ -1,6 +1,6 @@
 package spbetu.prim.loggers;
 
-import spbetu.prim.view.ScrollPaneLog;
+import spbetu.prim.viewmodel.ScrollPaneLog;
 
 public class GraphLogger {
 

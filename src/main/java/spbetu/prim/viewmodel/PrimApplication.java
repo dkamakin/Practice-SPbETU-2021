@@ -1,4 +1,4 @@
-package spbetu.prim.view;
+package spbetu.prim.viewmodel;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,12 +9,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.controller.Controller;
+import spbetu.prim.view.View;
 
 @Slf4j
 public class PrimApplication extends Application {
 
-    private Controller controller;
+    private View controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
