@@ -20,7 +20,8 @@ public class AlgorithmTask extends Task<Void> {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                log.info("Couldn't stop the thread ");
+                log.info("Couldn't stop the thread: " + e.getMessage());
+                return null;
             }
         }
 
