@@ -18,26 +18,22 @@ import java.util.List;
 public class GraphView {
 
     private int currId;
-    private ScrollPaneLog scrollPaneLog;
     private StackPane prevStackPane;
 
     private List<EdgeView> edges;
 
-    public GraphView(ScrollPaneLog scrollPane) {
-        scrollPaneLog = scrollPane;
+    public GraphView() {
         currId = 0;
         prevStackPane = null;
         edges = new ArrayList<>();
     }
 
     public void clear() {
-        scrollPaneLog.clearingGraphMessage();
         currId = 0;
         prevStackPane = null;
     }
 
     public StackPane addNode(MouseEvent mouseEvent) {
-        scrollPaneLog.addNodeMessage(Integer.toString(currId));
 
         StackPane stackPane = new StackPane();
         Circle circle = getCircle();
@@ -56,7 +52,6 @@ public class GraphView {
 
     public void chooseNode(MouseEvent mouseEvent) {
         prevStackPane = (StackPane) mouseEvent.getSource();
-        scrollPaneLog.nodeClickedMessage(((Text)prevStackPane.getChildren().get(1)).getText());
     }
 
     public void removeNode(Node node) {
@@ -73,9 +68,6 @@ public class GraphView {
             return null;
 
         StackPane currStackPane = (StackPane) mouseEvent.getSource();
-
-        scrollPaneLog.addEdgeMessage(((Text)prevStackPane.getChildren().get(1)).getText(),
-                ((Text)currStackPane.getChildren().get(1)).getText());
 
         log.info("Drawing a line between nodes " +
                 ((Text) prevStackPane.getChildren().get(1)).getText() +
@@ -173,7 +165,4 @@ public class GraphView {
         );
     }
 
-    public void clearLogging(){
-        scrollPaneLog.clear();
-    }
 }

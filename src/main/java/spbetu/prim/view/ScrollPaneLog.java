@@ -17,23 +17,12 @@ public class ScrollPaneLog {
         scrollPaneLog.setContent(text);
     }
 
-    public void addNodeMessage(String value) {
-        text.setText(text.getText() + "New Node " + value + '\n');
-    }
-
-    public void addEdgeMessage(String node1, String node2) {
-        text.setText(text.getText() + "New Edge between Node " + node1 + " and Node " + node2 + '\n');
-    }
-
-    public void clearingGraphMessage() {
-        text.setText(text.getText() + "Clearing the Graph\n");
-    }
-
-    public void nodeClickedMessage(String node) {
-        text.setText(text.getText() + "Clicked Node " + node + '\n');
+    public void addNewMessage(String message){
+        text.setText(text.getText() + message + '\n');
     }
 
     public void clear() {
         text.setText("");
     }
+
 }

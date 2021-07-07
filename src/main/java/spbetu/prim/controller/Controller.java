@@ -12,6 +12,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.control.ScrollPane;
 import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.loggers.GraphLogger;
 import spbetu.prim.model.*;
 import spbetu.prim.view.*;
 
@@ -34,12 +35,18 @@ public class Controller implements Initializable {
     private Graph graph;
     private ActionType actionType;
     private boolean scrollPaneClickedFlag;
+    private ScrollPaneLog scrollPaneLog;
+    private GraphLogger graphLogger;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        view = new GraphView(new ScrollPaneLog(logTextArea));
+        view = new GraphView();
         actionType = ActionType.ADD_NODE;
-        graph = new Graph();
+
+        scrollPaneLog = new ScrollPaneLog(logTextArea); //ScrollPane - Вывод информации на окно с логами
+        graphLogger = new GraphLogger(scrollPaneLog);   // Добавление через ScrollPane информации о графе
+
+        graph = new Graph(graphLogger);
     }
 
     public void anchorPaneClicked(MouseEvent mouseEvent) {
@@ -141,7 +148,7 @@ public class Controller implements Initializable {
     }
 
     public void clearLoggingArea() {
-        view.clearLogging();
+        scrollPaneLog.clear();      //Очистка окна с логами
     }
 
     public void cancelSelection() {
