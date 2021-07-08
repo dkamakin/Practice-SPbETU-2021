@@ -24,9 +24,9 @@ import java.util.List;
 public class GraphView {
 
     private final GraphVisualizer visualizer;
-    private List<EdgeView> edges;
     private final PrimAlgorithm algorithm;
     private final Graph graph;
+    private List<EdgeView> edges;
     private int currId;
     private StackPane prevStackPane;
     private AlgorithmTask algorithmTask;

@@ -5,10 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import spbetu.prim.model.graph.Graph;
 
-import java.io.FileNotFoundException;
-
-import static org.junit.Assert.*;
-
 public class GraphTest {
 
     Graph graph;

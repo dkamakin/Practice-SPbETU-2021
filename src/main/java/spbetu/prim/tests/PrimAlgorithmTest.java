@@ -9,12 +9,8 @@ import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.loader.FileLoader;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Array;
-import java.util.Date;
 import java.util.Stack;
-import java.util.ArrayList;
 
 public class PrimAlgorithmTest {
     PrimAlgorithm actualPrimAlgorithm;
@@ -47,39 +43,37 @@ public class PrimAlgorithmTest {
     }
 
     @After
-    public void endTest(){
+    public void endTest() {
         actualPrimAlgorithm.clearGraph();
         expectSpanningTree.clear();
         expectPrimAlgorithm.clearGraph();
     }
 
-    public void isEqualEdges(Edge<Double> expectEdge, Edge<Double> actualEdge){
+    public void isEqualEdges(Edge<Double> expectEdge, Edge<Double> actualEdge) {
         Assert.assertEquals(expectEdge.getWeight(), actualEdge.getWeight());
         int actualFrom = actualEdge.getVertexFrom().getNumber();
         int actualTo = actualEdge.getVertexTo().getNumber();
         int expectFrom = expectEdge.getVertexFrom().getNumber();
         int expectTo = expectEdge.getVertexTo().getNumber();
-        boolean equal = false;
-        if((actualFrom == expectFrom && actualTo == expectTo) ||
-                (actualFrom == expectTo && actualTo == expectFrom))
-            equal = true;
+        boolean equal = (actualFrom == expectFrom && actualTo == expectTo) ||
+                (actualFrom == expectTo && actualTo == expectFrom);
         Assert.assertTrue(equal);
     }
 
     @Test
-    public void runAlgorithm(){
+    public void runAlgorithm() {
         actualPrimAlgorithm.runAlgorithm();
         expectPrimAlgorithm.runAlgorithm();
         Stack<Edge<Double>> actualSpanningTree = actualPrimAlgorithm.getSpanningTree();
         Assert.assertEquals(expectSpanningTree.size(), actualSpanningTree.size());
-        for(int i = 0; i < actualSpanningTree.size(); i++){
+        for (int i = 0; i < actualSpanningTree.size(); i++) {
             isEqualEdges(expectSpanningTree.get(i), actualSpanningTree.get(i));
         }
     }
 
     @Test
     public void runAlgorithmByStep() {
-        for(Edge<Double> edge : expectSpanningTree){
+        for (Edge<Double> edge : expectSpanningTree) {
             isEqualEdges(edge, actualPrimAlgorithm.runAlgorithmByStep());
         }
     }
@@ -88,11 +82,11 @@ public class PrimAlgorithmTest {
     public void addEdgeToSpanningTree() {
         Stack<Edge<Double>> actualSpanningTree = new Stack<>();
 
-        for(int i = 0; i < expectSpanningTree.size(); i++){
+        for (int i = 0; i < expectSpanningTree.size(); i++) {
             actualSpanningTree.add(expectSpanningTree.get(i));
             actualPrimAlgorithm.addEdgeToSpanningTree(expectSpanningTree.get(i).getVertexFrom(),
-                                                        expectSpanningTree.get(i).getVertexTo(),
-                                                        expectSpanningTree.get(i).getWeight());
+                    expectSpanningTree.get(i).getVertexTo(),
+                    expectSpanningTree.get(i).getWeight());
             isEqualEdges(actualSpanningTree.get(i), actualPrimAlgorithm.getSpanningTree().get(i));
         }
     }
@@ -107,15 +101,15 @@ public class PrimAlgorithmTest {
     @Test
     public void clearGraph() {
         actualPrimAlgorithm.clearGraph();
-        Assert.assertEquals(0, actualPrimAlgorithm.getGraph().size());
+        Assert.assertEquals(0, actualPrimAlgorithm.getGraph().getSize());
         Assert.assertEquals(0, actualPrimAlgorithm.getSpanningTree().size());
     }
 
     @Test
     public void graphStartAgain() {
-        int size = actualPrimAlgorithm.getGraph().size();
+        int size = actualPrimAlgorithm.getGraph().getSize();
         actualPrimAlgorithm.restart();
-        Assert.assertEquals(size, actualPrimAlgorithm.getGraph().size());
+        Assert.assertEquals(size, actualPrimAlgorithm.getGraph().getSize());
         Assert.assertEquals(0, actualPrimAlgorithm.getSpanningTree().size());
     }
 }

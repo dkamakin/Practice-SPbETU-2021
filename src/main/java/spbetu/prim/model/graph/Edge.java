@@ -32,7 +32,6 @@ public class Edge<T> { // вес может быть числом или Charact
         return vertexTo;
     }
 
-
     public Vertex getNextVertex() {  // т.к. граф ненаправленный, возвращает ту вершину, в которой мы еще не были
         if (vertexFrom.isVisited() && !vertexTo.isVisited()) // если были в vertexFrom, но не были в vertexTo
             return vertexTo;

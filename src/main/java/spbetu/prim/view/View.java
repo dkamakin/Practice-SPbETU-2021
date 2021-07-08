@@ -35,11 +35,10 @@ public class View implements Initializable {
 
     @FXML
     public AnchorPane anchorPane;
-
+    public ScrollPaneLog scrollPaneLog;
     private GraphView viewModel;
     private ActionType actionType;
     private ILogger logger;
-    public ScrollPaneLog scrollPaneLog;
     private boolean scrollPaneClickedFlag;
 
     @Override
@@ -53,8 +52,10 @@ public class View implements Initializable {
     public void anchorPaneClicked(MouseEvent mouseEvent) {
         log.info("anchorPane was clicked, action = " + actionType);
 
-        if (scrollPaneClickedFlag)
+        if (scrollPaneClickedFlag) {
             scrollPaneClickedFlag = false;
+            return;
+        }
 
         switch (actionType) {
             case ADD_NODE:

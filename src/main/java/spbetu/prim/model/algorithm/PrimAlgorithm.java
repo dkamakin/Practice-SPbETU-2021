@@ -8,7 +8,6 @@ import spbetu.prim.model.graph.Vertex;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
@@ -154,7 +153,7 @@ public class PrimAlgorithm {
         }
     }
 
-    public Stack<Edge<Double>> getSpanningTree(){
+    public Stack<Edge<Double>> getSpanningTree() {
         return spanningTree;
     }
 
