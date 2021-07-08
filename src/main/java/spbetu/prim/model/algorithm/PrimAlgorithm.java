@@ -1,6 +1,7 @@
 package spbetu.prim.model.algorithm;
 
-import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.loggers.ConsoleLogger;
+import spbetu.prim.loggers.ILogger;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.graph.Vertex;
@@ -11,22 +12,29 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
 
-@Slf4j
 public class PrimAlgorithm {
 
     private final Graph graph;  // сам граф
 
     private final Stack<Edge> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
 
+    private final ILogger logger;
+
     public PrimAlgorithm(Graph graph) {
         this.graph = graph;
-        spanningTree = new Stack<>();
+        this.logger = new ConsoleLogger();
+        this.spanningTree = new Stack<>();
+    }
+
+    public PrimAlgorithm(Graph graph, ILogger logger) {
+        this.graph = graph;
+        this.logger = logger;
+        this.spanningTree = new Stack<>();
     }
 
     public void runAlgorithm() {
         if (graph.getSize() > 0) {
             graph.getVertex(0).setVisited(true);  // посещаем первую вершину
-            log.info(graph.getVertex(0).getNumber() + " vertex was visited");
         } else
             return;
 
@@ -38,7 +46,6 @@ public class PrimAlgorithm {
     public Edge runAlgorithmByStep() {
         if (graph.getSize() > 0) {
             graph.getVertex(0).setVisited(true);  // посещаем первую вершину
-            log.info(graph.getVertex(0).getNumber() + " vertex was visited");
         } else
             return null;
 
@@ -48,10 +55,10 @@ public class PrimAlgorithm {
 
         Vertex thisVertex = null;
 
-        for (Vertex vertex : graph.getGraph()) { // рассматриваем все вершины графа
+        for (Vertex vertex : graph.getVertices()) { // рассматриваем все вершины графа
 
             if (vertex.isVisited()) {  // если вершина посещена
-                log.info("Looking at edges of " + vertex.getNumber() + " vertex");
+                logger.info("Looking at edges of " + vertex.getNumber() + " vertex");
                 Edge candidate = vertex.getMinimum();
 
                 if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
@@ -71,9 +78,9 @@ public class PrimAlgorithm {
         if (nextMinimumEdge.getVertexTo() == null || nextMinimumEdge.getVertexFrom() == null)
             return null;
 
-        log.info("In result added edge " + nextMinimumEdge.getVertexFrom().getNumber()
+        logger.info("In result added edge " + nextMinimumEdge.getVertexFrom().getNumber()
                 + "-" + nextMinimumEdge.getVertexTo().getNumber() + " with weight " + nextMinimumEdge.getWeight());
-        log.info(nextVertex.getNumber() + " vertex was visited");
+        logger.info(nextVertex.getNumber() + " vertex was visited");
 
         return nextMinimumEdge;
     }
@@ -99,16 +106,19 @@ public class PrimAlgorithm {
         from.forPreviousStep(to);  // отмечаем, что ребро не посещено!
         to.forPreviousStep(from);  // в обе стороны
 
+        logger.info("Going back");
         return lastEdge;
     }
 
     public void clearGraph() {    //для очистки данных графа, полностью новый ввод
+        logger.info("Clearing the graph");
         graph.clear();
         spanningTree.clear();
     }
 
     public void restart() {
-        for (Vertex vertex : graph.getGraph()) {
+        logger.info("Restarting the algorithm");
+        for (Vertex vertex : graph.getVertices()) {
             vertex.setVisited(false); // // теперь вершина не посещенная
             Set<HashMap.Entry<Vertex, Edge>> set = vertex.getEdges().entrySet();
             for (HashMap.Entry<Vertex, Edge> me : set)
@@ -121,7 +131,7 @@ public class PrimAlgorithm {
         try (FileWriter writer = new FileWriter(fileName, false))  // файл перезаписывается
         {
             writer.write("Source graph:\n");
-            for (Vertex vertex : graph.getGraph()) {
+            for (Vertex vertex : graph.getVertices()) {
                 Set<HashMap.Entry<Vertex, Edge>> set = vertex.getEdges().entrySet(); // словарь ребер вершины
                 for (HashMap.Entry<Vertex, Edge> edge : set) {
                     writer.write(vertex.getNumber() +
@@ -139,7 +149,7 @@ public class PrimAlgorithm {
 
             writer.flush();
         } catch (IOException e) {
-            log.info("Couldn't write to file: " + e.getMessage());
+            logger.info("Couldn't write to file: " + e.getMessage());
         }
     }
 }

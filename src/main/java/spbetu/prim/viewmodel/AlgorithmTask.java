@@ -28,11 +28,11 @@ public class AlgorithmTask extends Task<Void> {
         return null;
     }
 
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
-
     public boolean isAlive() {
         return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
     }
 }

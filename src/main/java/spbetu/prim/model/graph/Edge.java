@@ -2,10 +2,9 @@ package spbetu.prim.model.graph;
 
 public class Edge { // вес может быть числом или Character
     private final Integer weight;
-    private boolean included = false;
-
     private final Vertex vertexFrom;
     private final Vertex vertexTo;
+    private boolean included = false;
 
     public Edge(Integer weight, Vertex from, Vertex to) {
         this.weight = weight;

@@ -39,7 +39,10 @@
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
-                <Menu mnemonicParsing="false" text="File" />
+                <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open..." />
+               </items></Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About" />
@@ -65,6 +68,7 @@
                   <Button mnemonicParsing="false" onAction="#resetClicked" text="Reset" />
                   <Button mnemonicParsing="false" onAction="#clearClicked" text="Clear" />
                   <CheckBox mnemonicParsing="false" onAction="#deleteClicked" text="Delete" />
+                  <CheckBox mnemonicParsing="false" onAction="#moveClicked" text="Move" />
               </items>
             </ToolBar>
             </children>

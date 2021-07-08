@@ -14,12 +14,12 @@ public class Vertex {  // класс ребра
         visited = false;
     }
 
-    public void setVisited(boolean flag) {
-        visited = flag;
-    }
-
     public boolean isVisited() {
         return visited;
+    }
+
+    public void setVisited(boolean flag) {
+        visited = flag;
     }
 
     public void vertexAddEdge(Vertex nextVertex, Edge edge) { // функция добавления ребра

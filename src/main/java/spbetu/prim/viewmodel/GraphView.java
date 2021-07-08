@@ -2,42 +2,42 @@ package spbetu.prim.viewmodel;
 
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextBoundsType;
 import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.loggers.ILogger;
 import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
+import spbetu.prim.model.loader.FileLoader;
 import spbetu.prim.window.InfoWindow;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class GraphView {
 
-    private int currId;
-    private StackPane prevStackPane;
-
+    private final GraphVisualizer visualizer;
     private final List<EdgeView> edges;
-
     private final PrimAlgorithm algorithm;
     private final Graph graph;
-
+    private int currId;
+    private StackPane prevStackPane;
     private AlgorithmTask algorithmTask;
 
-    public GraphView() {
+    public GraphView(ILogger logger) {
         this.currId = 0;
         this.prevStackPane = null;
+        this.visualizer = new GraphVisualizer();
         this.edges = new ArrayList<>();
         this.graph = new Graph();
-        this.algorithm = new PrimAlgorithm(graph);
+        this.algorithm = new PrimAlgorithm(graph, logger);
         this.algorithmTask = null;
     }
 
@@ -47,24 +47,36 @@ public class GraphView {
         algorithm.restart();
     }
 
-    public StackPane addNode(MouseEvent mouseEvent) {
-        StackPane stackPane = new StackPane();
-        Circle circle = getCircle();
-
-        Text text = new Text(String.valueOf(currId++));
-        styleText(text);
-
-        stackPane.getChildren().addAll(
-                circle,
-                text
-        );
-        stackPane.setLayoutY(mouseEvent.getY() - circle.getRadius());
-        stackPane.setLayoutX(mouseEvent.getX() - circle.getRadius());
-        return stackPane;
+    public StackPane addNode(double x, double y) {
+        return visualizer.getVertex(x, y, currId++);
     }
 
-    public void chooseNode(MouseEvent mouseEvent) {
-        prevStackPane = (StackPane) mouseEvent.getSource();
+    public List<EdgeView> readGraphFromFile(String fileName) {
+        log.info("Trying to read from {}", fileName);
+
+        try {
+            FileLoader fileLoader = new FileLoader(fileName);
+            graph.clear();
+            fileLoader.loadGraph(graph);
+        } catch (FileNotFoundException e) {
+            log.error("Couldn't read from the file: " + e.getMessage());
+        }
+
+        currId = graph.getSize();
+        return visualizer.visualize(graph);
+    }
+
+    public void chooseNode(StackPane vertex) {
+        prevStackPane = vertex;
+    }
+
+    public void moveVertex(double x, double y) {
+        if (prevStackPane == null)
+            return;
+
+        log.info("Move");
+        prevStackPane.setLayoutX(x);
+        prevStackPane.setLayoutY(y);
     }
 
     public void removeVertexWithEdges(Node node) {
@@ -170,51 +182,36 @@ public class GraphView {
     }
 
     public boolean checkWeight(String weight) {
-        return !weight.isEmpty();
+        return weight == null || !weight.isEmpty();
     }
 
-    public Pane addEdge(MouseEvent mouseEvent, String weight) {
-        if (prevStackPane == null || prevStackPane == mouseEvent.getSource() || !checkWeight(weight))
+    public Pane addEdge(StackPane secondVertex, String weight) {
+        if (!checkWeight(weight))
             return null;
-
-        StackPane currStackPane = (StackPane) mouseEvent.getSource();
 
         log.info("Drawing a line between nodes " +
                 ((Text) prevStackPane.getChildren().get(1)).getText() +
                 " and " +
-                ((Text) currStackPane.getChildren().get(1)).getText());
+                ((Text) secondVertex.getChildren().get(1)).getText());
+
+        EdgeView edge = visualizer.getEdge(prevStackPane, secondVertex, weight);
+        edges.add(edge);
+
+        if (edge == null)
+            return null;
 
         Pane pane = new Pane();
-        Line line = new Line();
-
-        line.startXProperty().bind(
-                prevStackPane.layoutXProperty().add(prevStackPane.getBoundsInParent().getWidth() / 2.0));
-        line.startYProperty().bind(
-                prevStackPane.layoutYProperty().add(prevStackPane.getBoundsInParent().getHeight() / 2.0));
-
-        line.endXProperty().bind(
-                currStackPane.layoutXProperty().add(currStackPane.getBoundsInParent().getWidth() / 2.0));
-        line.endYProperty().bind(
-                currStackPane.layoutYProperty().add(currStackPane.getBoundsInParent().getHeight() / 2.0));
-
-        Text text = new Text(weight);
-        text.xProperty().bind(
-                prevStackPane.layoutXProperty().add(currStackPane.layoutXProperty()).divide(2));
-        text.yProperty().bind(
-                prevStackPane.layoutYProperty().add(currStackPane.layoutYProperty()).divide(2));
-        styleText(text);
-
         pane.getChildren().addAll(
-                line,
-                prevStackPane,
-                text,
-                currStackPane
+                edge.getLine(),
+                edge.getFrom(),
+                edge.getWeight(),
+                edge.getTo()
         );
 
-        edges.add(new EdgeView(prevStackPane, currStackPane, line, text));
         graph.addNewEdge(
-                getNodeId(prevStackPane), getNodeId(currStackPane), Integer.parseInt(text.getText())
+                getNodeId(prevStackPane), getNodeId(secondVertex), Integer.parseInt(weight)
         );
+
         prevStackPane = null;
         return pane;
     }
@@ -262,21 +259,5 @@ public class GraphView {
         }
 
         algorithm.restart();
-    }
-
-    public Circle getCircle() {
-        Circle circle = new Circle();
-        circle.setRadius(20);
-        circle.setFill(Color.ORCHID);
-        return circle;
-    }
-
-    public void styleText(Text text) {
-        text.setBoundsType(TextBoundsType.VISUAL);
-        text.setStyle(
-                "-fx-font-family: \"Times New Roman\";" +
-                        "-fx-font-style: italic;" +
-                        "-fx-font-size: 22px;"
-        );
     }
 }
