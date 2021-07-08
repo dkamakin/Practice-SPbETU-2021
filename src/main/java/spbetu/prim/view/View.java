@@ -34,19 +34,20 @@ public class View implements Initializable {
     public AnchorPane secondAnchorPane;
 
     @FXML
-    private AnchorPane anchorPane;
+    public AnchorPane anchorPane;
 
     private GraphView viewModel;
     private ActionType actionType;
     private ILogger logger;
-
+    public ScrollPaneLog scrollPaneLog;
     private boolean scrollPaneClickedFlag;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logger = new ApplicationLogger(new ScrollPaneLog(logTextArea));
-        viewModel = new GraphView(logger);
-        actionType = ActionType.ADD_NODE;
+        this.scrollPaneLog = new ScrollPaneLog(logTextArea);
+        this.logger = new ApplicationLogger(new ScrollPaneLog(logTextArea));
+        this.viewModel = new GraphView();
+        this.actionType = ActionType.ADD_NODE;
     }
 
     public void anchorPaneClicked(MouseEvent mouseEvent) {

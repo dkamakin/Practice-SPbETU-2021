@@ -9,7 +9,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.ILogger;
+import spbetu.prim.loggers.ConsoleLogger;
 import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
@@ -24,26 +24,28 @@ import java.util.List;
 public class GraphView {
 
     private final GraphVisualizer visualizer;
-    private final List<EdgeView> edges;
+    private List<EdgeView> edges;
     private final PrimAlgorithm algorithm;
     private final Graph graph;
     private int currId;
     private StackPane prevStackPane;
     private AlgorithmTask algorithmTask;
 
-    public GraphView(ILogger logger) {
+    public GraphView() {
         this.currId = 0;
         this.prevStackPane = null;
         this.visualizer = new GraphVisualizer();
         this.edges = new ArrayList<>();
         this.graph = new Graph();
-        this.algorithm = new PrimAlgorithm(graph, logger);
+        this.algorithm = new PrimAlgorithm(graph, new ConsoleLogger());
         this.algorithmTask = null;
     }
 
     public void clear() {
         currId = 0;
         prevStackPane = null;
+        edges.clear();
+        graph.clear();
         algorithm.restart();
     }
 
@@ -63,7 +65,8 @@ public class GraphView {
         }
 
         currId = graph.getSize();
-        return visualizer.visualize(graph);
+        edges = visualizer.visualize(graph);
+        return edges;
     }
 
     public void chooseNode(StackPane vertex) {
@@ -120,7 +123,7 @@ public class GraphView {
     }
 
     public void previousStep() {
-        Edge lastEdge = algorithm.previousStep();
+        Edge<Double> lastEdge = algorithm.previousStep();
 
         if (lastEdge == null) {
             log.info("Algorithm returned prev step as null");
@@ -195,11 +198,11 @@ public class GraphView {
                 ((Text) secondVertex.getChildren().get(1)).getText());
 
         EdgeView edge = visualizer.getEdge(prevStackPane, secondVertex, weight);
-        edges.add(edge);
 
         if (edge == null)
             return null;
 
+        edges.add(edge);
         Pane pane = new Pane();
         pane.getChildren().addAll(
                 edge.getLine(),
@@ -223,6 +226,7 @@ public class GraphView {
         for (EdgeView elem : edges) {
             StackPane first = elem.getFrom();
             StackPane second = elem.getTo();
+
             if (firstNode == getNodeId(first) && secondNode == getNodeId(second)) {
                 log.info("Found the edge in the list of edgeview");
                 Color color = Color.BLUE;
