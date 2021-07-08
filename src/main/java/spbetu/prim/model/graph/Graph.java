@@ -114,4 +114,16 @@ public class Graph {
             log.info("Added new vertex with number " + indexVertex);
         }
     }
+
+    public int getCountOfEdges() {
+        int count = 0;
+        for(Vertex vertice : vertices){
+            count += vertice.getEdges().size();
+        }
+        return count;
+    }
+
+    public int size(){
+        return vertices.size();
+    }
 }

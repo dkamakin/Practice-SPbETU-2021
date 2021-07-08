@@ -8,6 +8,7 @@ import spbetu.prim.model.graph.Vertex;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
@@ -151,6 +152,14 @@ public class PrimAlgorithm {
         } catch (IOException e) {
             logger.info("Couldn't write to file: " + e.getMessage());
         }
+    }
+
+    public Stack<Edge<Double>> getSpanningTree(){
+        return spanningTree;
+    }
+
+    public Graph getGraph() {
+        return graph;
     }
 }
 
