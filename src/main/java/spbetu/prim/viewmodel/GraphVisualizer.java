@@ -32,7 +32,7 @@ public class GraphVisualizer {
         }
 
         List<EdgeView> result = new ArrayList<>();
-        for (Edge elem : graph.getEdges()) {
+        for (Edge<Double> elem : graph.getEdges()) {
             EdgeView edgeView =
                     getEdge(
                             vertices.get(elem.getVertexFrom().getNumber() - 1),
@@ -98,8 +98,8 @@ public class GraphVisualizer {
         text.setBoundsType(TextBoundsType.VISUAL);
         text.setStyle(
                 "-fx-font-family: \"Times New Roman\";" +
-                        "-fx-font-style: italic;" +
-                        "-fx-font-size: 22px;"
+                "-fx-font-style: italic;" +
+                "-fx-font-size: 22px;"
         );
     }
 }

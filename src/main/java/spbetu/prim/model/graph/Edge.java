@@ -1,18 +1,18 @@
 package spbetu.prim.model.graph;
 
-public class Edge { // вес может быть числом или Character
-    private final Integer weight;
+public class Edge<T> { // вес может быть числом или Character
+    private final T weight;
     private final Vertex vertexFrom;
     private final Vertex vertexTo;
     private boolean included = false;
 
-    public Edge(Integer weight, Vertex from, Vertex to) {
-        this.weight = weight;
-        this.vertexFrom = from;
-        this.vertexTo = to;
+    public Edge(T w, Vertex from, Vertex to) {
+        weight = w;
+        vertexFrom = from;
+        vertexTo = to;
     }
 
-    public Integer getWeight() {
+    public T getWeight() {
         return weight;  //возвращает вес-число
     }
 

@@ -16,9 +16,9 @@ public class GraphTest {
 
     public GraphTest() {
         graph = new Graph();
-        graph.addNewEdge(0, 1, 2);
-        graph.addNewEdge(0, 2, 2);
-        graph.addNewEdge(1, 2, 1);
+        graph.addNewEdge(0, 1, (double) 2);
+        graph.addNewEdge(0, 2, (double) 2);
+        graph.addNewEdge(1, 2, (double) 1);
     }
 
     @Before
@@ -37,14 +37,14 @@ public class GraphTest {
 
         Assert.assertEquals(oldCount - 2, newCount);
 
-        graph.addNewEdge(0, 1, 2);
+        graph.addNewEdge(0, 1, (double) 2);
     }
 
     @Test
     public void addNewEdge() {
         int oldCount = graph.getCountOfEdges();
 
-        graph.addNewEdge(2, 3, 5);
+        graph.addNewEdge(2, 3, (double) 5);
 
         int newCount = graph.getCountOfEdges();
 
