@@ -37,7 +37,7 @@ public class GraphView {
         this.visualizer = new GraphVisualizer();
         this.edges = new ArrayList<>();
         this.graph = new Graph();
-        this.algorithm = new PrimAlgorithm(graph, new ConsoleLogger());
+        this.algorithm = PrimAlgorithm.getInstanceWithLogger(graph, new ConsoleLogger());
         this.algorithmTask = null;
     }
 

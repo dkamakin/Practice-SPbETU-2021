@@ -19,14 +19,23 @@ public class PrimAlgorithm {
     private final Stack<Edge<Double>> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
 
     private final ILogger logger;
+    private static PrimAlgorithm instance;
 
-    public PrimAlgorithm(Graph graph) {
+
+    public static PrimAlgorithm getInstanceWithLogger(Graph graph, ILogger logger) {
+        if (instance == null) {
+            instance = new PrimAlgorithm(graph, logger);
+        }
+        return instance;
+    }
+
+   public PrimAlgorithm(Graph graph) {  // можно ли использовать singleton в тестах?
         this.graph = graph;
         this.logger = new ConsoleLogger();
         this.spanningTree = new Stack<>();
     }
 
-    public PrimAlgorithm(Graph graph, ILogger logger) {
+    private PrimAlgorithm(Graph graph, ILogger logger) {
         this.graph = graph;
         this.logger = logger;
         this.spanningTree = new Stack<>();
