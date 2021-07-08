@@ -7,8 +7,8 @@ import javafx.scene.text.Text;
 
 public class ScrollPaneLog {
 
-    private Text text;
-    private ScrollPane scrollPaneLog;
+    private final Text text;
+    private final ScrollPane scrollPaneLog;
 
     public ScrollPaneLog(ScrollPane scrollPane) {
         text = new Text();
@@ -17,7 +17,7 @@ public class ScrollPaneLog {
         scrollPaneLog.setContent(text);
     }
 
-    public void addNewMessage(String message){
+    public void addNewMessage(String message) {
         text.setText(text.getText() + message + '\n');
     }
 

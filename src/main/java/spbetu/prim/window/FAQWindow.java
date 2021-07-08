@@ -8,20 +8,18 @@ public class FAQWindow {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("FAQ");
         alert.setHeaderText("FAQ");
-        String content = """
-                 1. How to add a node?
-                 Just press the working space
-                 2. How to connect nodes?
-                 Press them in order you want and type a weight of the rib
-                 3. How do I deselect a vertex?
-                 Press ESC
-                 4. How to delete an item?
-                 Choose the option in Action menu
-                 5. How to change a weight?
-                 Press on the number
-                 6. How to clear the scene?
-                 Choose the option in Action menu
-                """;
+        String content = " 1. How to add a node?\n" +
+                         " Just press the working space\n" +
+                         " 2. How to connect nodes?\n" +
+                         " Press them in order you want and type a weight of the rib\n" +
+                         " 3. How do I deselect a vertex?\n" +
+                         " Press ESC\n" +
+                         " 4. How to delete an item?\n" +
+                         " Choose the option in Action menu\n" +
+                         " 5. How to change a weight?\n" +
+                         " Press on the number\n" +
+                         " 6. How to clear the scene?\n" +
+                         " Choose the option in Action menu\n";
         alert.setContentText(content);
         alert.show();
     }

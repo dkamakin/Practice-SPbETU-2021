@@ -4,5 +4,7 @@ public enum ActionType {
     ADD_NODE,
     CONNECT_NODES,
     CHANGE_WEIGHT,
-    DELETE
+    DELETE,
+    MOVE,
+    MOVE_CHOOSE
 }

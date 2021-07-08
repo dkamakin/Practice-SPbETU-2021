@@ -2,29 +2,30 @@ package spbetu.prim.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.scene.control.ScrollPane;
+import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.GraphLogger;
-import spbetu.prim.viewmodel.*;
+import spbetu.prim.loggers.ApplicationLogger;
+import spbetu.prim.loggers.ILogger;
+import spbetu.prim.viewmodel.EdgeView;
+import spbetu.prim.viewmodel.GraphView;
+import spbetu.prim.viewmodel.ScrollPaneLog;
 import spbetu.prim.window.AboutWindow;
 import spbetu.prim.window.FAQWindow;
 import spbetu.prim.window.InfoWindow;
 import spbetu.prim.window.WeightWindow;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Slf4j
 public class View implements Initializable {
-
-    @FXML
-    private AnchorPane anchorPane;
 
     @FXML
     public ScrollPane logTextArea;
@@ -32,71 +33,82 @@ public class View implements Initializable {
     @FXML
     public AnchorPane secondAnchorPane;
 
+    @FXML
+    public AnchorPane anchorPane;
+
     private GraphView viewModel;
     private ActionType actionType;
+    private ILogger logger;
+    public ScrollPaneLog scrollPaneLog;
     private boolean scrollPaneClickedFlag;
-    private ScrollPaneLog scrollPaneLog;
-    private GraphLogger graphLogger;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        viewModel = new GraphView();
-        actionType = ActionType.ADD_NODE;
-
-        scrollPaneLog = new ScrollPaneLog(logTextArea); //ScrollPane - Вывод информации на окно с логами
-        graphLogger = new GraphLogger(scrollPaneLog);   // Добавление через ScrollPane информации о графе
+        this.scrollPaneLog = new ScrollPaneLog(logTextArea);
+        this.logger = new ApplicationLogger(new ScrollPaneLog(logTextArea));
+        this.viewModel = new GraphView();
+        this.actionType = ActionType.ADD_NODE;
     }
 
     public void anchorPaneClicked(MouseEvent mouseEvent) {
-        log.info("anchorPane was clicked");
-        if (scrollPaneClickedFlag) {
+        log.info("anchorPane was clicked, action = " + actionType);
+
+        if (scrollPaneClickedFlag)
             scrollPaneClickedFlag = false;
-        } else if (actionType == ActionType.ADD_NODE) {
-            log.info("Adding a node");
-            StackPane stackPane = viewModel.addNode(mouseEvent);
-            anchorPane.getChildren().add(stackPane);
-            stackPane.setOnMouseClicked(this::stackPaneClicked);
-        } else if (actionType == ActionType.CHANGE_WEIGHT) {
-            actionType = ActionType.ADD_NODE;
+
+        switch (actionType) {
+            case ADD_NODE:
+                log.info("Adding a node");
+                StackPane stackPane = viewModel.addNode(
+                        mouseEvent.getX(), mouseEvent.getY()
+                );
+                anchorPane.getChildren().add(stackPane);
+                stackPane.setOnMouseClicked(this::stackPaneClicked);
+                break;
+            case CHANGE_WEIGHT:
+                actionType = ActionType.ADD_NODE;
+                break;
+            case MOVE:
+                viewModel.moveVertex(mouseEvent.getX(), mouseEvent.getY());
+                break;
+            default:
+                break;
         }
     }
 
     public void stackPaneClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the stackPane");
-            viewModel.removeNode((StackPane) mouseEvent.getSource());
+            viewModel.removeVertexWithEdges((StackPane) mouseEvent.getSource());
+            return;
+        } else if (actionType == ActionType.MOVE_CHOOSE ||
+                actionType == ActionType.MOVE) {
+            log.info("Chose the vertex to move");
+            actionType = ActionType.MOVE;
+            viewModel.chooseNode((StackPane) mouseEvent.getSource());
             return;
         } else if (actionType != ActionType.CONNECT_NODES) {
             log.info("StackPane clicked. The node was chosen");
             actionType = ActionType.CONNECT_NODES;
-            viewModel.chooseNode(mouseEvent);
+            viewModel.chooseNode((StackPane) mouseEvent.getSource());
             return;
         }
 
         log.info("The second node was chosen");
-        Pane pane = viewModel.addEdge(mouseEvent, askWeight());
+        Pane pane = viewModel.addEdge((StackPane) mouseEvent.getSource(), askWeight());
 
         if (pane == null)
             return;
 
         pane.getChildren().get(2).setOnMouseClicked(this::weightClicked);
-        pane.getChildren().get(0).setOnMouseClicked(this::lineClicked);
         pane.setPickOnBounds(false);
         anchorPane.getChildren().add(pane);
-    }
-
-    public void lineClicked(MouseEvent mouseEvent) {
-        log.info("Line was clicked");
-        if (actionType == ActionType.DELETE) {
-            log.info("Removing the line");
-            viewModel.removeNode((Line) mouseEvent.getSource());
-        }
     }
 
     public void weightClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the weight");
-            viewModel.removeNode((Text) mouseEvent.getSource());
+            viewModel.removeEdgeByWeight((Text) mouseEvent.getSource());
             return;
         }
 
@@ -137,7 +149,7 @@ public class View implements Initializable {
     }
 
     public void clearLoggingArea() {
-        scrollPaneLog.clear();      //Очистка окна с логами
+        logger.clear();      //Очистка окна с логами
     }
 
     public void cancelSelection() {
@@ -176,10 +188,50 @@ public class View implements Initializable {
 
     public void prevStepClicked() {
         log.info("Prev step clicked");
+        viewModel.previousStep();
     }
 
     public void stopPressed() {
         log.info("Stop algorithm");
         viewModel.stopAlgorithm();
+    }
+
+    public void openClicked() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open file");
+
+        List<EdgeView> graphFromFile = viewModel.readGraphFromFile(
+                fileChooser.showOpenDialog(anchorPane.getScene().getWindow()).getPath()
+        );
+
+        for (EdgeView elem : graphFromFile) {
+            elem.getWeight().setOnMouseClicked(this::weightClicked);
+            elem.getFrom().setOnMouseClicked(this::stackPaneClicked);
+            elem.getTo().setOnMouseClicked(this::stackPaneClicked);
+
+            Pane pane = new Pane();
+
+            pane.getChildren().addAll(
+                    elem.getLine(),
+                    elem.getFrom(),
+                    elem.getWeight(),
+                    elem.getTo()
+            );
+
+            pane.setLayoutY(anchorPane.getScene().getHeight() / 2);
+            pane.setLayoutX(anchorPane.getScene().getWidth() / 2);
+
+            anchorPane.getChildren().add(pane);
+        }
+    }
+
+    public void moveClicked() {
+        log.info("Move was clicked");
+        if (actionType == ActionType.MOVE || actionType == ActionType.MOVE_CHOOSE) {
+            actionType = ActionType.ADD_NODE;
+            return;
+        }
+
+        actionType = ActionType.MOVE_CHOOSE;
     }
 }
