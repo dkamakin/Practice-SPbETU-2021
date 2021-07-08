@@ -2,16 +2,16 @@ package spbetu.prim.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.scene.control.ScrollPane;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.loggers.GraphLogger;
-import spbetu.prim.viewmodel.*;
+import spbetu.prim.viewmodel.GraphView;
+import spbetu.prim.viewmodel.ScrollPaneLog;
 import spbetu.prim.window.AboutWindow;
 import spbetu.prim.window.FAQWindow;
 import spbetu.prim.window.InfoWindow;
@@ -64,7 +64,7 @@ public class View implements Initializable {
     public void stackPaneClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the stackPane");
-            viewModel.removeNode((StackPane) mouseEvent.getSource());
+            viewModel.removeVertexWithEdges((StackPane) mouseEvent.getSource());
             return;
         } else if (actionType != ActionType.CONNECT_NODES) {
             log.info("StackPane clicked. The node was chosen");
@@ -80,23 +80,14 @@ public class View implements Initializable {
             return;
 
         pane.getChildren().get(2).setOnMouseClicked(this::weightClicked);
-        pane.getChildren().get(0).setOnMouseClicked(this::lineClicked);
         pane.setPickOnBounds(false);
         anchorPane.getChildren().add(pane);
-    }
-
-    public void lineClicked(MouseEvent mouseEvent) {
-        log.info("Line was clicked");
-        if (actionType == ActionType.DELETE) {
-            log.info("Removing the line");
-            viewModel.removeNode((Line) mouseEvent.getSource());
-        }
     }
 
     public void weightClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the weight");
-            viewModel.removeNode((Text) mouseEvent.getSource());
+            viewModel.removeEdgeByWeight((Text) mouseEvent.getSource());
             return;
         }
 
@@ -176,6 +167,7 @@ public class View implements Initializable {
 
     public void prevStepClicked() {
         log.info("Prev step clicked");
+        viewModel.previousStep();
     }
 
     public void stopPressed() {

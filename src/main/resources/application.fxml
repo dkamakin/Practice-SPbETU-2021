@@ -61,9 +61,9 @@
                 <Button mnemonicParsing="false" onAction="#prevStepClicked" text="Prev step" />
                   <Button mnemonicParsing="false" onAction="#nextStepClicked" text="Next step" />
                   <Button mnemonicParsing="false" onAction="#runClicked" text="Run" />
+                  <Button mnemonicParsing="false" onAction="#stopPressed" text="Stop" />
                   <Button mnemonicParsing="false" onAction="#resetClicked" text="Reset" />
                   <Button mnemonicParsing="false" onAction="#clearClicked" text="Clear" />
-                  <Button mnemonicParsing="false" onAction="#stopPressed" text="Stop" />
                   <CheckBox mnemonicParsing="false" onAction="#deleteClicked" text="Delete" />
               </items>
             </ToolBar>

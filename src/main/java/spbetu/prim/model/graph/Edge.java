@@ -1,19 +1,19 @@
-package spbetu.prim.model;
+package spbetu.prim.model.graph;
 
-public class Edge  { // вес может быть числом или Character
-    private Integer weight;
+public class Edge { // вес может быть числом или Character
+    private final Integer weight;
     private boolean included = false;
 
-    private Vertex vertexFrom;
-    private Vertex vertexTo;
+    private final Vertex vertexFrom;
+    private final Vertex vertexTo;
 
-    public Edge(Integer w, Vertex from, Vertex to) {
-        weight = w;
-        vertexFrom = from;
-        vertexTo = to;
+    public Edge(Integer weight, Vertex from, Vertex to) {
+        this.weight = weight;
+        this.vertexFrom = from;
+        this.vertexTo = to;
     }
 
-    Integer getWeight() {
+    public Integer getWeight() {
         return weight;  //возвращает вес-число
     }
 
@@ -21,7 +21,7 @@ public class Edge  { // вес может быть числом или Character
         return included;
     }
 
-    void setIncluded(boolean flag) {
+    public void setIncluded(boolean flag) {
         included = flag;
     }
 

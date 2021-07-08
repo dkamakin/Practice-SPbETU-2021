@@ -11,8 +11,9 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.model.Edge;
-import spbetu.prim.model.Graph;
+import spbetu.prim.model.algorithm.PrimAlgorithm;
+import spbetu.prim.model.graph.Edge;
+import spbetu.prim.model.graph.Graph;
 import spbetu.prim.window.InfoWindow;
 
 import java.util.ArrayList;
@@ -25,21 +26,25 @@ public class GraphView {
     private StackPane prevStackPane;
 
     private final List<EdgeView> edges;
+
+    private final PrimAlgorithm algorithm;
     private final Graph graph;
+
     private AlgorithmTask algorithmTask;
 
     public GraphView() {
-        currId = 0;
-        prevStackPane = null;
-        edges = new ArrayList<>();
-        graph = new Graph();
-        algorithmTask = null;
+        this.currId = 0;
+        this.prevStackPane = null;
+        this.edges = new ArrayList<>();
+        this.graph = new Graph();
+        this.algorithm = new PrimAlgorithm(graph);
+        this.algorithmTask = null;
     }
 
     public void clear() {
         currId = 0;
         prevStackPane = null;
-        graph.graphStartAgain();
+        algorithm.restart();
     }
 
     public StackPane addNode(MouseEvent mouseEvent) {
@@ -62,18 +67,87 @@ public class GraphView {
         prevStackPane = (StackPane) mouseEvent.getSource();
     }
 
-    public void removeNode(Node node) {
+    public void removeVertexWithEdges(Node node) {
+        int id = getNodeId((StackPane) node);
+        graph.deleteVertex(id);
+
         Pane pane = (Pane) node.getParent();
         pane.getChildren().remove(node);
+
+        for (int i = 0; i < edges.size(); i++) {
+            EdgeView elem = edges.get(i);
+
+            if (getNodeId(elem.getTo()) == id ||
+                    getNodeId(elem.getFrom()) == id) {
+                edges.remove(elem);
+                i--;
+
+                Pane linePane = (Pane) elem.getLine().getParent();
+
+                if (linePane == null)
+                    continue;
+
+                linePane.getChildren().remove(elem.getLine());
+                linePane.getChildren().remove(elem.getWeight());
+            }
+        }
+    }
+
+    public void removeEdgeByWeight(Node node) {
+        for (EdgeView elem : edges) {
+            if (elem.getWeight() == node) {
+                log.info("Found edge");
+                Pane pane = (Pane) elem.getLine().getParent();
+                pane.getChildren().remove(elem.getLine());
+                pane.getChildren().remove(elem.getWeight());
+                graph.deleteEdge(getNodeId(elem.getFrom()), getNodeId(elem.getTo()));
+                edges.remove(elem);
+                return;
+            }
+        }
+    }
+
+    public void previousStep() {
+        Edge lastEdge = algorithm.previousStep();
+
+        if (lastEdge == null) {
+            log.info("Algorithm returned prev step as null");
+            return;
+        }
+
+        int numberFrom = lastEdge.getVertexFrom().getNumber();
+        int numberTo = lastEdge.getVertexTo().getNumber();
+
+        for (EdgeView elem : edges) {
+            int from = getNodeId(elem.getFrom());
+            int to = getNodeId(elem.getTo());
+
+            if (numberFrom == from && numberTo == to) {
+                log.info("Found the prev step");
+                paintCircle(elem.getTo(), Color.ORCHID);
+                paintLine(elem.getLine(), Color.BLACK, 1);
+                return;
+            } else if (numberFrom == to && numberTo == from) {
+                log.info("Found the prev step");
+                paintCircle(elem.getFrom(), Color.ORCHID);
+                paintLine(elem.getLine(), Color.BLACK, 1);
+                return;
+            }
+        }
+
+        log.info("Didn't find the last step");
     }
 
     public boolean nextStep() {
-        Edge edge = graph.runAlgorithmByStep();
+        Edge edge = algorithm.runAlgorithmByStep();
 
         if (edge == null || edge.getVertexTo() == null || edge.getVertexFrom() == null)
             return true;
 
-        addEdgeToTree(edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight());
+        addEdgeToTree(
+                edge.getVertexFrom().getNumber(), edge.getVertexTo().getNumber(), edge.getWeight()
+        );
+
         return false;
     }
 
@@ -137,8 +211,10 @@ public class GraphView {
                 currStackPane
         );
 
-        edges.add(new EdgeView(prevStackPane, currStackPane, line));
-        graph.addNewEdge(getNodeId(prevStackPane), getNodeId(currStackPane), Integer.parseInt(text.getText()));
+        edges.add(new EdgeView(prevStackPane, currStackPane, line, text));
+        graph.addNewEdge(
+                getNodeId(prevStackPane), getNodeId(currStackPane), Integer.parseInt(text.getText())
+        );
         prevStackPane = null;
         return pane;
     }
@@ -185,7 +261,7 @@ public class GraphView {
             paintLine(elem.getLine(), Color.BLACK, 1);
         }
 
-        graph.graphStartAgain();
+        algorithm.restart();
     }
 
     public Circle getCircle() {

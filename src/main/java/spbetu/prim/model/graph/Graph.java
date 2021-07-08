@@ -1,77 +1,95 @@
-package spbetu.prim.model;
+package spbetu.prim.model.graph;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import spbetu.prim.loggers.GraphLogger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 @Slf4j
 public class Graph {
-    private static Logger log = LoggerFactory.getLogger(Graph.class);
-    ArrayList<Vertex> graph; // массив вершин (у каждой вершины номер и словарь ребер)
-    private GraphLogger graphLogger;
 
-    public Graph(GraphLogger graphLog) {
-        graphLogger = graphLog;
+    private final ArrayList<Vertex> graph; // массив вершин (у каждой вершины номер и словарь ребер)
+
+    public Graph() {
         graph = new ArrayList<>();
     }
 
+    public List<Vertex> getGraph() {
+        return graph;
+    }
+
+    public void clear() {
+        graph.clear();
+    }
+
+    public int getSize() {
+        return graph.size();
+    }
+
+    public Vertex getVertex(int index) {
+        return graph.get(index);
+    }
+
     public Graph cloneGraph() {                                // клонирование графа (на всякий случай)))
-        Graph clone = new Graph(graphLogger);
+        Graph clone = new Graph();
+
         for (Vertex vertex : graph) {
-            Vertex vertexClone = new Vertex(vertex.number);
+            Vertex vertexClone = new Vertex(vertex.getNumber());
             clone.graph.add(vertexClone);
         }
+
         return clone;
+    }
+
+    public void deleteVertex(int indexVertex) {
+        for (Vertex vertex : graph) {
+            vertex.deleteEdgeFromDictionary(indexVertex);
+        }
     }
 
     public void deleteEdge(int indexVertexFrom, int indexVertexTo) {
         for (Vertex vertex : graph) { // пробегаемся по вершинам графа
-
-            if (vertex.number == indexVertexFrom) {  // если номер искомой вершины найден
+            if (vertex.getNumber() == indexVertexFrom) {  // если номер искомой вершины найден
                 vertex.deleteEdgeFromDictionary(indexVertexTo);
-            }
-
-            else if (vertex.number == indexVertexTo) {  // и в обратную сторону
+            } else if (vertex.getNumber() == indexVertexTo) {  // и в обратную сторону
                 vertex.deleteEdgeFromDictionary(indexVertexFrom);
             }
         }
-
     }
 
     public Edge addNewEdge(int indexVertex1, int indexVertex2, int edge12) { // две вершины и вес
         log.info("Adding edge from {} to {} with weight {}", indexVertex1, indexVertex2, edge12);
+
         checkIndex(indexVertex1); // добавляем вершину в граф, если она встречается первый раз
         checkIndex(indexVertex2);
+
         Vertex to = graph.get(indexVertex(indexVertex1));
         Vertex from = graph.get(indexVertex(indexVertex2));
         Edge edge = new Edge(edge12, to, from); // в принципе, не важно откуда куда, так как граф не направленный
         to.vertexAddEdge(from, edge);
         from.vertexAddEdge(to, edge);
+
         log.info("Created edge");
-        graphLogger.addEdgeMessage(indexVertex1, indexVertex2, edge12);
         return edge;
     }
 
 
-    boolean isDisconnected() { // возвращает true, если есть не посещенная вершина
-        for (Vertex vertex : graph) {
-            if (!vertex.isVisited()) {
+    public boolean isDisconnected() { // возвращает true, если есть не посещенная вершина
+        for (Vertex vertex : graph)
+            if (!vertex.isVisited())
                 return true;
-            }
-        }
+
         return false;
     }
 
     private int indexVertex(int number) {
-        for (Vertex vertex : graph) {
-            if (vertex.number == number)
+        for (Vertex vertex : graph)
+            if (vertex.getNumber() == number)
                 return graph.indexOf(vertex);
-        }
+
         return -1;
     }
 
@@ -79,14 +97,13 @@ public class Graph {
         if (indexVertex(indexVertex) < 0) {
             graph.add(new Vertex(indexVertex));
             log.info("Added new vertex with number " + indexVertex);
-            graphLogger.addNodeMessage(indexVertex);
         }
     }
 
     void fillGraphFromFile(String fileName) throws FileNotFoundException {
-        int indexVertex1 = -1;
-        int indexVertex2 = -1;
-        int edge12 = -1;
+        int indexVertex1;
+        int indexVertex2;
+        int edge12;
         String dash;
         File file = new File(fileName);
         Scanner scanner = new Scanner(file);
@@ -116,8 +133,7 @@ public class Graph {
                 edge12 = scanner.nextInt();
                 if (edge12 > 32000)   // костыль
                     return;
-            }
-            else {
+            } else {
                 scanner.next();
                 log.info("Wrong weight");
                 return;
