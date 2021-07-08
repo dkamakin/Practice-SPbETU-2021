@@ -151,7 +151,7 @@ public class GraphView {
     }
 
     public boolean nextStep() {
-        Edge edge = algorithm.runAlgorithmByStep();
+        Edge<Double> edge = algorithm.runAlgorithmByStep();
 
         if (edge == null || edge.getVertexTo() == null || edge.getVertexFrom() == null)
             return true;
@@ -209,14 +209,14 @@ public class GraphView {
         );
 
         graph.addNewEdge(
-                getNodeId(prevStackPane), getNodeId(secondVertex), Integer.parseInt(weight)
+                getNodeId(prevStackPane), getNodeId(secondVertex), Double.parseDouble(weight)
         );
 
         prevStackPane = null;
         return pane;
     }
 
-    public void addEdgeToTree(int firstNode, int secondNode, int weight) {
+    public void addEdgeToTree(int firstNode, int secondNode, Double weight) {
         log.info("Adding an edge to the tree: ({}) - ({}), weight: {}",
                 firstNode, secondNode, weight);
 

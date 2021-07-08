@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Vertex {  // класс ребра
     private int number;
-    private HashMap<Vertex, Edge> edges;
+    private HashMap<Vertex, Edge<Double>> edges;
     private boolean visited;
 
     Vertex(int number) {
@@ -26,12 +26,12 @@ public class Vertex {  // класс ребра
         edges.put(nextVertex, edge);
     }
 
-    public Edge getMinimum() {  // возвращает ребро
-        Edge nextMinimumEdge = new Edge(Integer.MAX_VALUE, null, null);  /// ???? generic
+    public Edge<Double> getMinimum() {  // возвращает ребро
+        Edge<Double> nextMinimumEdge = new Edge(Double.MAX_VALUE, null, null);  /// ???? generic
 
-        Set<HashMap.Entry<Vertex, Edge>> set = edges.entrySet();
+        Set<HashMap.Entry<Vertex, Edge<Double>>> set = edges.entrySet();
 
-        for (HashMap.Entry<Vertex, Edge> me : set) {
+        for (HashMap.Entry<Vertex, Edge<Double>> me : set) {
 
             if (!me.getKey().isVisited() && (!me.getValue().isIncluded())) {
                 if (me.getValue().getWeight() < nextMinimumEdge.getWeight()) {
@@ -44,8 +44,8 @@ public class Vertex {  // класс ребра
     }
 
     public void forPreviousStep(Vertex to) {  // для отката назад, отметить, что ребро не посещали
-        Set<HashMap.Entry<Vertex, Edge>> set = edges.entrySet(); // словарь вершины
-        for (HashMap.Entry<Vertex, Edge> me : set) {
+        Set<HashMap.Entry<Vertex, Edge<Double>>> set = edges.entrySet(); // словарь вершины
+        for (HashMap.Entry<Vertex, Edge<Double>> me : set) {
             if (me.getKey().equals(to)) {
                 me.getValue().setIncluded(false);  // возвращает ребро
             }
@@ -53,14 +53,15 @@ public class Vertex {  // класс ребра
     }
 
     public void deleteEdgeFromDictionary(int indexVertexTo) {
-        Set<HashMap.Entry<Vertex, Edge>> set = edges.entrySet(); // словарь ребер вершины
-        for (HashMap.Entry<Vertex, Edge> edge : set) {
+        Set<HashMap.Entry<Vertex, Edge<Double>>> set = edges.entrySet(); // словарь ребер вершины
+        for (HashMap.Entry<Vertex, Edge<Double>> edge : set) {
             if (edge.getKey().number == indexVertexTo) { // нашли в словаре ребро ко второй вершине
                 edges.remove(edge.getKey());  // удаляем из словаря
                 break;
             }
         }
     }
+
 
     public int getNumber() {
         return number;
@@ -70,11 +71,11 @@ public class Vertex {  // класс ребра
         this.number = number;
     }
 
-    public HashMap<Vertex, Edge> getEdges() {
+    public HashMap<Vertex, Edge<Double>> getEdges() {
         return edges;
     }
 
-    public void setEdges(HashMap<Vertex, Edge> edges) {
+    public void setEdges(HashMap<Vertex, Edge<Double>> edges) {
         this.edges = edges;
     }
 }

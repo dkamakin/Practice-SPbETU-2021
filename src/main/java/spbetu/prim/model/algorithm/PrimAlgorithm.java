@@ -16,7 +16,7 @@ public class PrimAlgorithm {
 
     private final Graph graph;  // сам граф
 
-    private final Stack<Edge> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
+    private final Stack<Edge<Double>> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
 
     private final ILogger logger;
 
@@ -43,13 +43,13 @@ public class PrimAlgorithm {
         }
     }
 
-    public Edge runAlgorithmByStep() {
+    public Edge<Double> runAlgorithmByStep() {
         if (graph.getSize() > 0) {
             graph.getVertex(0).setVisited(true);  // посещаем первую вершину
         } else
             return null;
 
-        Edge nextMinimumEdge = new Edge(Integer.MAX_VALUE, null, null); // для минимального ребра
+        Edge<Double> nextMinimumEdge = new Edge(Double.MAX_VALUE, null, null); // для минимального ребра
         // ?????? как быть с generic
         Vertex nextVertex = graph.getVertex(0);  // следующая вершина, куда перейдем (инициализируем первой, т.к. она посещена в самом начале)
 
@@ -59,7 +59,7 @@ public class PrimAlgorithm {
 
             if (vertex.isVisited()) {  // если вершина посещена
                 logger.info("Looking at edges of " + vertex.getNumber() + " vertex");
-                Edge candidate = vertex.getMinimum();
+                Edge<Double> candidate = vertex.getMinimum();
 
                 if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
                     nextMinimumEdge = candidate;
@@ -85,16 +85,16 @@ public class PrimAlgorithm {
         return nextMinimumEdge;
     }
 
-    public void addEdgeToSpanningTree(Vertex from, Vertex to, Integer edgeWeight) {
-        Edge edge = new Edge(edgeWeight, from, to);
+    public void addEdgeToSpanningTree(Vertex from, Vertex to, Double edgeWeight) {
+        Edge<Double> edge = new Edge(edgeWeight, from, to);
         spanningTree.push(edge);
     }
 
-    public Edge previousStep() {
+    public Edge<Double> previousStep() {
         if (spanningTree.empty())
             return null;
 
-        Edge lastEdge = spanningTree.pop();  // достали вершину из остова
+        Edge<Double> lastEdge = spanningTree.pop();  // достали вершину из остова
         lastEdge.getVertexTo().setVisited(false); // отметили, что не посетили вершину to
 
         Vertex from = lastEdge.getVertexFrom();
@@ -120,8 +120,8 @@ public class PrimAlgorithm {
         logger.info("Restarting the algorithm");
         for (Vertex vertex : graph.getVertices()) {
             vertex.setVisited(false); // // теперь вершина не посещенная
-            Set<HashMap.Entry<Vertex, Edge>> set = vertex.getEdges().entrySet();
-            for (HashMap.Entry<Vertex, Edge> me : set)
+            Set<HashMap.Entry<Vertex, Edge<Double>>> set = vertex.getEdges().entrySet();
+            for (HashMap.Entry<Vertex, Edge<Double>> me : set)
                 me.getValue().setIncluded(false);    // ребра являются не включенными
         }
         spanningTree.clear();
@@ -132,8 +132,8 @@ public class PrimAlgorithm {
         {
             writer.write("Source graph:\n");
             for (Vertex vertex : graph.getVertices()) {
-                Set<HashMap.Entry<Vertex, Edge>> set = vertex.getEdges().entrySet(); // словарь ребер вершины
-                for (HashMap.Entry<Vertex, Edge> edge : set) {
+                Set<HashMap.Entry<Vertex, Edge<Double>>> set = vertex.getEdges().entrySet(); // словарь ребер вершины
+                for (HashMap.Entry<Vertex, Edge<Double>> edge : set) {
                     writer.write(vertex.getNumber() +
                             "-" + edge.getKey().getNumber() + " " + edge.getValue().getWeight());
                     writer.write('\n');
@@ -141,7 +141,7 @@ public class PrimAlgorithm {
             }
 
             writer.write("Found spanning tree:\n");
-            for (Edge res : spanningTree) {
+            for (Edge<Double> res : spanningTree) {
                 writer.write(res.getVertexFrom().getNumber() +
                         "-" + res.getVertexTo().getNumber() + " " + res.getWeight());
                 writer.append('\n');

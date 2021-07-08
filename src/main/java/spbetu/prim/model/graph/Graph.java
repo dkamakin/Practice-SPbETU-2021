@@ -16,14 +16,14 @@ public class Graph {
         vertices = new ArrayList<>();
     }
 
-    public List<Edge> getEdges() {
-        List<Edge> result = new ArrayList<>();
+    public List<Edge<Double>> getEdges() {
+        List<Edge<Double>> result = new ArrayList<>();
 
         for (Vertex vertex : vertices) {
-            HashMap<Vertex, Edge> edges = vertex.getEdges();
-            Set<HashMap.Entry<Vertex, Edge>> set = edges.entrySet();
+            HashMap<Vertex, Edge<Double>> edges = vertex.getEdges();
+            Set<HashMap.Entry<Vertex, Edge<Double>>> set = edges.entrySet();
 
-            for (HashMap.Entry<Vertex, Edge> elem : set) {
+            for (HashMap.Entry<Vertex, Edge<Double>> elem : set) {
                 if (!result.contains(elem.getValue()))
                     result.add(elem.getValue());
             }
@@ -75,7 +75,7 @@ public class Graph {
         }
     }
 
-    public Edge addNewEdge(int indexVertex1, int indexVertex2, int edge12) { // две вершины и вес
+    public Edge<Double> addNewEdge(int indexVertex1, int indexVertex2, Double edge12) { // две вершины и вес
         log.info("Adding edge from {} to {} with weight {}", indexVertex1, indexVertex2, edge12);
 
         checkIndex(indexVertex1); // добавляем вершину в граф, если она встречается первый раз
@@ -83,7 +83,7 @@ public class Graph {
 
         Vertex to = vertices.get(indexVertex(indexVertex1));
         Vertex from = vertices.get(indexVertex(indexVertex2));
-        Edge edge = new Edge(edge12, to, from); // в принципе, не важно откуда куда, так как граф не направленный
+        Edge<Double> edge = new Edge(edge12, to, from); // в принципе, не важно откуда куда, так как граф не направленный
         to.vertexAddEdge(from, edge);
         from.vertexAddEdge(to, edge);
 

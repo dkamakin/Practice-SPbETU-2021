@@ -22,7 +22,7 @@ public class FileLoader implements ILoader {
     @Override
     public void loadGraph(Graph graph) {
         int vertexFrom, vertexTo;
-        int edge;
+        double edge;
         String dash;
 
         try {
@@ -46,7 +46,7 @@ public class FileLoader implements ILoader {
                 }
 
                 if (scanner.hasNextInt()) {
-                    edge = scanner.nextInt();
+                    edge = scanner.nextDouble();
                     if (edge > 32000)   // костыль
                         return;
                 } else {

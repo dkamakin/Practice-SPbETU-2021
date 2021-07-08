@@ -32,7 +32,7 @@ public class GraphVisualizer {
         }
 
         List<EdgeView> result = new ArrayList<>();
-        for (Edge elem : graph.getEdges()) {
+        for (Edge<Double> elem : graph.getEdges()) {
             EdgeView edgeView =
                     getEdge(
                             vertices.get(elem.getVertexFrom().getNumber() - 1),
