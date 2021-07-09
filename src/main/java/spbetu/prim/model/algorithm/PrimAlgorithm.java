@@ -19,7 +19,6 @@ public class PrimAlgorithm {
     private final Stack<Edge<Double>> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
     private final ILogger logger;
 
-
     public PrimAlgorithm(Graph graph) {  // можно ли использовать singleton в тестах?
         this.graph = graph;
         this.logger = new ConsoleLogger();
@@ -36,6 +35,7 @@ public class PrimAlgorithm {
         if (instance == null) {
             instance = new PrimAlgorithm(graph, logger);
         }
+
         return instance;
     }
 
@@ -65,7 +65,7 @@ public class PrimAlgorithm {
         for (Vertex vertex : graph.getVertices()) { // рассматриваем все вершины графа
 
             if (vertex.isVisited()) {  // если вершина посещена
-                logger.info("Looking at edges of " + vertex.getNumber() + " vertex");
+                logger.append("Looking at edges of " + vertex.getNumber() + " vertex" + '\n');
                 Edge<Double> candidate = vertex.getMinimum();
 
                 if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
@@ -74,20 +74,19 @@ public class PrimAlgorithm {
                     thisVertex = vertex;
                 }
             }
-
         }
 
         nextMinimumEdge.setIncluded(true);  // ребро включили
         nextVertex.setVisited(true); // вершину посетили
 
-        addEdgeToSpanningTree(thisVertex, nextVertex, nextMinimumEdge.getWeight());  // добавили в остов
-
         if (nextMinimumEdge.getVertexTo() == null || nextMinimumEdge.getVertexFrom() == null)
             return null;
 
-        logger.info("In result added edge " + nextMinimumEdge.getVertexFrom().getNumber()
-                + "-" + nextMinimumEdge.getVertexTo().getNumber() + " with weight " + nextMinimumEdge.getWeight());
-        logger.info(nextVertex.getNumber() + " vertex was visited");
+        addEdgeToSpanningTree(thisVertex, nextVertex, nextMinimumEdge.getWeight());  // добавили в остов
+
+        logger.append("In result added edge " + nextMinimumEdge.getVertexFrom().getNumber()
+                + "-" + nextMinimumEdge.getVertexTo().getNumber() + " with weight " + nextMinimumEdge.getWeight() + '\n');
+        logger.append(nextVertex.getNumber() + " vertex was visited\n");
 
         return nextMinimumEdge;
     }

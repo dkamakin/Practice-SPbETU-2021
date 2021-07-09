@@ -103,4 +103,14 @@ public class GraphVisualizer {
                         "-fx-font-size: 22px;"
         );
     }
+
+    public void paintCircle(StackPane stackPane, Color color) {
+        Circle circle = (Circle) stackPane.getChildren().get(0);
+        circle.setFill(color);
+    }
+
+    public void paintLine(Line line, Color color, int width) {
+        line.setStrokeWidth(width);
+        line.setStroke(color);
+    }
 }
