@@ -9,7 +9,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.ConsoleLogger;
+import spbetu.prim.logger.ConsoleLogger;
 import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
@@ -62,6 +62,7 @@ public class GraphView {
             fileLoader.loadGraph(graph);
         } catch (FileNotFoundException e) {
             log.error("Couldn't read from the file: " + e.getMessage());
+            return null;
         }
 
         currId = graph.getSize();
@@ -185,7 +186,17 @@ public class GraphView {
     }
 
     public boolean checkWeight(String weight) {
-        return weight == null || !weight.isEmpty();
+        if (weight == null || weight.isEmpty())
+            return false;
+
+        try {
+            Double.parseDouble(weight);
+        } catch (NumberFormatException e) {
+            log.error("Wrong weight");
+            return false;
+        }
+
+        return true;
     }
 
     public Pane addEdge(StackPane secondVertex, String weight) {

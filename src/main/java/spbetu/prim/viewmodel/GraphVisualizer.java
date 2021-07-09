@@ -12,6 +12,7 @@ import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -19,7 +20,7 @@ public class GraphVisualizer {
 
     public List<EdgeView> visualize(Graph graph) {
         List<Vertex> vertexList = graph.getVertices();
-        List<StackPane> vertices = new ArrayList<>();
+        HashMap<Integer, StackPane> vertices = new HashMap<>();
 
         int radius = vertexList.size() * 15;
         int amountVertices = vertexList.size();
@@ -27,15 +28,16 @@ public class GraphVisualizer {
         for (int i = 0; i < amountVertices; i++) {
             int x = (int) (Math.cos(2 * Math.PI * i / amountVertices) * radius + 0.5);
             int y = (int) (Math.sin(2 * Math.PI * i / amountVertices) * radius + 0.5);
-            vertices.add(getVertex(x, y, i));
+            int number = vertexList.get(i).getNumber();
+            vertices.put(number, getVertex(x, y, number));
         }
 
         List<EdgeView> result = new ArrayList<>();
         for (Edge<Double> elem : graph.getEdges()) {
             EdgeView edgeView =
                     getEdge(
-                            vertices.get(elem.getVertexFrom().getNumber() - 1),
-                            vertices.get(elem.getVertexTo().getNumber() - 1),
+                            vertices.get(elem.getVertexFrom().getNumber()),
+                            vertices.get(elem.getVertexTo().getNumber()),
                             String.valueOf(elem.getWeight())
                     );
             result.add(edgeView);

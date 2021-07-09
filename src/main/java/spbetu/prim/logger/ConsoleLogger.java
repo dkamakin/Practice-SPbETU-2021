@@ -1,4 +1,4 @@
-package spbetu.prim.loggers;
+package spbetu.prim.logger;
 
 public class ConsoleLogger implements ILogger {
 

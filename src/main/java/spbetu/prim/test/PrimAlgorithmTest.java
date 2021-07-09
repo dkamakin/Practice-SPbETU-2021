@@ -1,4 +1,4 @@
-package spbetu.prim.tests;
+package spbetu.prim.test;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -23,10 +23,10 @@ public class PrimAlgorithmTest {
     FileLoader addEdgeToSpanningTreeTest;
 
     public PrimAlgorithmTest() throws FileNotFoundException {
-        runAlgorithmResultFile = new FileLoader("./Test_files/PrimAlgorithmTests/RunAlgorithmResult.txt");
-        runAlgorithmTestFile = new FileLoader("./Test_files/PrimAlgorithmTests/RunAlgorithmTest.txt");
-        addEdgeToSpanningTreeResult = new FileLoader("./Test_files/PrimAlgorithmTests/AddEdgeToSpanningTreeResult.txt");
-        addEdgeToSpanningTreeTest = new FileLoader("./Test_files/PrimAlgorithmTests/AddEdgeToSpanningTreeTest.txt");
+        runAlgorithmResultFile = new FileLoader("./tests/PrimAlgorithmTests/RunAlgorithmResult.txt");
+        runAlgorithmTestFile = new FileLoader("./tests/PrimAlgorithmTests/RunAlgorithmTest.txt");
+        addEdgeToSpanningTreeResult = new FileLoader("./tests/PrimAlgorithmTests/AddEdgeToSpanningTreeResult.txt");
+        addEdgeToSpanningTreeTest = new FileLoader("./tests/PrimAlgorithmTests/AddEdgeToSpanningTreeTest.txt");
     }
 
     @Before

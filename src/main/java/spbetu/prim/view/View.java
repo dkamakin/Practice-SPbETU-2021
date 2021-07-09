@@ -9,9 +9,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.ApplicationLogger;
-import spbetu.prim.loggers.ILogger;
+import spbetu.prim.logger.ApplicationLogger;
+import spbetu.prim.logger.ILogger;
 import spbetu.prim.viewmodel.EdgeView;
 import spbetu.prim.viewmodel.GraphView;
 import spbetu.prim.viewmodel.ScrollPaneLog;
@@ -197,12 +198,22 @@ public class View implements Initializable {
         viewModel.stopAlgorithm();
     }
 
-    public void openClicked() {
+    public String getFileName(Window ownerWindow) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open file");
 
+        return fileChooser.showOpenDialog(ownerWindow).getPath();
+    }
+
+    public void openClicked() {
+        String fileName = getFileName(anchorPane.getScene().getWindow());
+
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+
         List<EdgeView> graphFromFile = viewModel.readGraphFromFile(
-                fileChooser.showOpenDialog(anchorPane.getScene().getWindow()).getPath()
+                fileName
         );
 
         for (EdgeView elem : graphFromFile) {

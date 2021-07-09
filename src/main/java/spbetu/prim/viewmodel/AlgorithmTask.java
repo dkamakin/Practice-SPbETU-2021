@@ -11,7 +11,7 @@ public class AlgorithmTask extends Task<Void> {
 
     public AlgorithmTask(GraphView graphView) {
         this.graphView = graphView;
-        isAlive = true;
+        this.isAlive = true;
     }
 
     @Override
