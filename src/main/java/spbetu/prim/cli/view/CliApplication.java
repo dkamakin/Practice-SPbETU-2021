@@ -20,6 +20,7 @@ public class CliApplication {
                 "6. Output graph\n" +
                 "7. Output the tree\n" +
                 "8. Read from file\n" +
+                "9. Write to file\n" +
                 "0. Exit\n" +
                 "Your action: ");
     }
@@ -76,6 +77,10 @@ public class CliApplication {
                 case 8:
                     System.out.print("Input path to the file: ");
                     viewModel.readGraphFromFile(scanner.nextLine());
+                    break;
+                case 9:
+                    System.out.print("Input path to the file: ");
+                    viewModel.writeToFile(scanner.nextLine());
                     break;
                 default:
                     break;

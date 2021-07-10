@@ -148,4 +148,8 @@ public class ViewModel {
             log.error("Couldn't read from the file: " + e.getMessage());
         }
     }
+
+    public void writeToFile(String fileName) {
+        algorithm.writeToFile(fileName);
+    }
 }
