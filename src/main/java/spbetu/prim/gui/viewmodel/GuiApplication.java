@@ -1,4 +1,4 @@
-package spbetu.prim.viewmodel;
+package spbetu.prim.gui.viewmodel;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,10 +9,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.view.View;
+import spbetu.prim.gui.view.View;
 
 @Slf4j
-public class PrimApplication extends Application {
+public class GuiApplication extends Application {
 
     private View controller;
 

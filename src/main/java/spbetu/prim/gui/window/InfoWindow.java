@@ -1,4 +1,4 @@
-package spbetu.prim.window;
+package spbetu.prim.gui.window;
 
 import javafx.scene.control.Alert;
 

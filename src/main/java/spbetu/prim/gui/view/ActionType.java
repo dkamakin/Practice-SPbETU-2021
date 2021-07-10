@@ -1,4 +1,4 @@
-package spbetu.prim.view;
+package spbetu.prim.gui.view;
 
 public enum ActionType {
     ADD_NODE,

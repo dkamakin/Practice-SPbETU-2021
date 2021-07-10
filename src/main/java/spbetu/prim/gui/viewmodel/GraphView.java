@@ -1,4 +1,4 @@
-package spbetu.prim.viewmodel;
+package spbetu.prim.gui.viewmodel;
 
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
@@ -9,12 +9,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.exception.GraphInputException;
+import spbetu.prim.gui.window.InfoWindow;
 import spbetu.prim.logger.ApplicationLogger;
 import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.loader.FileLoader;
-import spbetu.prim.window.InfoWindow;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class GraphView {
             return;
 
         log.info("Move");
-        int radius = (int) ((Circle)  prevStackPane.getChildren().get(0))
+        int radius = (int) ((Circle) prevStackPane.getChildren().get(0))
                 .getRadius();
         prevStackPane.setLayoutX(x - radius);
         prevStackPane.setLayoutY(y - radius);
@@ -214,9 +215,9 @@ public class GraphView {
         return true;
     }
 
-    public Pane addEdge(StackPane secondVertex, String weight) {
+    public Pane addEdge(StackPane secondVertex, String weight) throws GraphInputException {
         if (!checkWeight(weight))
-            return null;
+            throw new GraphInputException("Wrong weight");
 
         log.info("Drawing a line between nodes " +
                 ((Text) prevStackPane.getChildren().get(1)).getText() +

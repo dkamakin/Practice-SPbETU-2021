@@ -1,4 +1,4 @@
-package spbetu.prim.view;
+package spbetu.prim.gui.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,13 +11,15 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.viewmodel.EdgeView;
-import spbetu.prim.viewmodel.GraphView;
-import spbetu.prim.window.AboutWindow;
-import spbetu.prim.window.FAQWindow;
-import spbetu.prim.window.InfoWindow;
-import spbetu.prim.window.WeightWindow;
+import spbetu.prim.exception.GraphInputException;
+import spbetu.prim.gui.viewmodel.EdgeView;
+import spbetu.prim.gui.viewmodel.GraphView;
+import spbetu.prim.gui.window.AboutWindow;
+import spbetu.prim.gui.window.FAQWindow;
+import spbetu.prim.gui.window.InfoWindow;
+import spbetu.prim.gui.window.WeightWindow;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -91,7 +93,13 @@ public class View implements Initializable {
         }
 
         log.info("The second node was chosen");
-        Pane pane = viewModel.addEdge((StackPane) mouseEvent.getSource(), askWeight());
+        Pane pane;
+        try {
+            pane = viewModel.addEdge((StackPane) mouseEvent.getSource(), askWeight());
+        } catch (GraphInputException e) {
+            new InfoWindow().show(e.getMessage());
+            return;
+        }
 
         if (pane == null)
             return;
@@ -197,8 +205,12 @@ public class View implements Initializable {
     public String getFileName(Window ownerWindow) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open file");
+        File file = fileChooser.showOpenDialog(ownerWindow);
 
-        return fileChooser.showOpenDialog(ownerWindow).getPath();
+        if (file == null)
+            return null;
+
+        return file.getPath();
     }
 
     public void openClicked() {

@@ -1,4 +1,4 @@
-package spbetu.prim.viewmodel;
+package spbetu.prim.gui.viewmodel;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;

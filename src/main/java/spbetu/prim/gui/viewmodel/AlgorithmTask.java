@@ -1,4 +1,4 @@
-package spbetu.prim.viewmodel;
+package spbetu.prim.gui.viewmodel;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
