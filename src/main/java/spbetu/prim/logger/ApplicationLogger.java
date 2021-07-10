@@ -1,6 +1,6 @@
 package spbetu.prim.logger;
 
-import spbetu.prim.viewmodel.ScrollPaneLog;
+import spbetu.prim.gui.viewmodel.ScrollPaneLog;
 
 public class ApplicationLogger implements ILogger {
 
