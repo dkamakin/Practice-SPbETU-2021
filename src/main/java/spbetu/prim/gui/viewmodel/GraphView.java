@@ -1,5 +1,6 @@
 package spbetu.prim.gui.viewmodel;
 
+import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -169,7 +170,7 @@ public class GraphView {
 
     public boolean nextStep() {
         Edge<Double> edge = algorithm.runAlgorithmByStep();
-
+        Platform.runLater(this::updateLogger);
         if (edge == null || edge.getVertexTo() == null || edge.getVertexFrom() == null)
             return true;
 
@@ -280,5 +281,6 @@ public class GraphView {
         }
 
         algorithm.restart();
+        applicationLogger.clear();
     }
 }

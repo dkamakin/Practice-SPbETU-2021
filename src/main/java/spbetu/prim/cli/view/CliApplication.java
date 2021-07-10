@@ -28,14 +28,13 @@ public class CliApplication {
     public static void main(String[] args) {
         ViewModel viewModel = new ViewModel();
         Scanner scanner = new Scanner(System.in);
-        int action;
+        String action;
 
         outputHelp();
-        while ((action = scanner.nextInt()) != 0) {
+        while (!(action = scanner.next()).equals("0")) {
             scanner.nextLine();
-
             switch (action) {
-                case 1:
+                case "1":
                     try {
                         System.out.print("Input an edge with weight (example: 1 - 2 3): ");
                         viewModel.addEdge(scanner.nextLine());
@@ -43,7 +42,7 @@ public class CliApplication {
                         log.error(e.getMessage());
                     }
                     break;
-                case 2:
+                case "2":
                     try {
                         System.out.print("Input and edge (example: 1 - 2): ");
                         viewModel.deleteEdge(scanner.nextLine());
@@ -51,34 +50,34 @@ public class CliApplication {
                         log.error(e.getMessage());
                     }
                     break;
-                case 3:
+                case "3":
                     viewModel.nextStep();
                     break;
-                case 4:
+                case "4":
                     viewModel.prevStep();
                     break;
-                case 5:
+                case "5":
                     viewModel.runAlgorithm();
                     break;
-                case 6:
+                case "6":
                     List<String> edgeList = viewModel.outputGraph();
                     log.info("Current graph: ");
                     for (String edge : edgeList) {
                         log.info(edge);
                     }
                     break;
-                case 7:
+                case "7":
                     List<String> edgeStack = viewModel.outputTree();
                     log.info("Current tree: ");
                     for (String string : edgeStack) {
                         log.info(string);
                     }
                     break;
-                case 8:
+                case "8":
                     System.out.print("Input path to the file: ");
                     viewModel.readGraphFromFile(scanner.nextLine());
                     break;
-                case 9:
+                case "9":
                     System.out.print("Input path to the file: ");
                     viewModel.writeToFile(scanner.nextLine());
                     break;

@@ -23,7 +23,6 @@ public class AlgorithmTask extends Task<Void> {
         while (!graphView.nextStep() && isAlive) {
             try {
                 Thread.sleep(1000);
-                Platform.runLater(logger::update);
             } catch (InterruptedException e) {
                 log.info("Couldn't stop the thread: " + e.getMessage());
                 return null;
