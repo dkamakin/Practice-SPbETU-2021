@@ -27,7 +27,7 @@ public class PrimApplication extends Application {
         controller = loader.getController();
 
         primaryStage.setTitle("Prim's algorithm");
-        Scene scene = new Scene(root, 1300, 900);
+        Scene scene = new Scene(root, 1400, 700);
         scene.setOnKeyPressed(this::keyPressed);
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image("/icon.jpeg"));

@@ -6,6 +6,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.logger.ApplicationLogger;
@@ -84,8 +85,10 @@ public class GraphView {
             return;
 
         log.info("Move");
-        prevStackPane.setLayoutX(x);
-        prevStackPane.setLayoutY(y);
+        int radius = (int) ((Circle)  prevStackPane.getChildren().get(0))
+                .getRadius();
+        prevStackPane.setLayoutX(x - radius);
+        prevStackPane.setLayoutY(y - radius);
     }
 
     public void removeVertexWithEdges(Node node) {
