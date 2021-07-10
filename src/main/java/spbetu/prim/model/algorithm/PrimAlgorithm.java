@@ -64,7 +64,7 @@ public class PrimAlgorithm {
             for (Vertex vertex : graph.getVertices()) { // рассматриваем все вершины графа
 
                 if (vertex.isVisited()) {  // если вершина посещена
-                    logger.append("\nVertex № " + vertex.getNumber() + " is already visited.\n" +
+                    logger.append("\nVertex {" + vertex.getNumber() + "} is already visited.\n" +
                             "\tLooking at edges of " + vertex.getNumber() + " vertex" + '\n');
 
                     Edge<Double> candidate = vertex.getMinimum();

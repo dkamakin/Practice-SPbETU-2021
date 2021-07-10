@@ -61,7 +61,7 @@ public class GraphView {
         return visualizer.getVertex(x, y, currId++);
     }
 
-    public List<EdgeView> readGraphFromFile(String fileName) {
+    public List<EdgeView> readGraphFromFile(String fileName, int circleX, int circleY) {
         log.info("Trying to read from {}", fileName);
 
         try {
@@ -74,7 +74,7 @@ public class GraphView {
         }
 
         currId = graph.getSize();
-        edges = visualizer.visualize(graph);
+        edges = visualizer.visualize(graph, circleX, circleY);
         return edges;
     }
 

@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 public class GraphVisualizer {
 
-    public List<EdgeView> visualize(Graph graph) {
+    public List<EdgeView> visualize(Graph graph, int circleX, int circleY) {
         List<Vertex> vertexList = graph.getVertices();
         HashMap<Integer, StackPane> vertices = new HashMap<>();
 
@@ -26,8 +26,8 @@ public class GraphVisualizer {
         int amountVertices = vertexList.size();
 
         for (int i = 0; i < amountVertices; i++) {
-            int x = (int) (Math.cos(2 * Math.PI * i / amountVertices) * radius + 0.5);
-            int y = (int) (Math.sin(2 * Math.PI * i / amountVertices) * radius + 0.5);
+            int x = (int) (Math.cos(2 * Math.PI * i / amountVertices) * radius + 0.5) + circleX;
+            int y = (int) (Math.sin(2 * Math.PI * i / amountVertices) * radius + 0.5) + circleY;
             int number = vertexList.get(i).getNumber();
             vertices.put(number, getVertex(x, y, number));
         }
