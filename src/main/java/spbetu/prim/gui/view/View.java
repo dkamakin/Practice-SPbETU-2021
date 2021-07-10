@@ -221,7 +221,9 @@ public class View implements Initializable {
         }
 
         List<EdgeView> graphFromFile = viewModel.readGraphFromFile(
-                fileName
+                fileName,
+                (int) (anchorPane.getScene().getWidth() / 2.5),
+                (int) (anchorPane.getScene().getHeight() / 2.3)
         );
 
         for (EdgeView elem : graphFromFile) {
@@ -237,9 +239,7 @@ public class View implements Initializable {
                     elem.getWeight(),
                     elem.getTo()
             );
-
-            pane.setLayoutY(anchorPane.getScene().getHeight() / 2.3);
-            pane.setLayoutX(anchorPane.getScene().getWidth() / 2.5);
+            pane.setPickOnBounds(false);
 
             anchorPane.getChildren().add(pane);
         }
