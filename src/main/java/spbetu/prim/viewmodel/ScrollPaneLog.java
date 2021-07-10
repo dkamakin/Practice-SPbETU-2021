@@ -24,5 +24,4 @@ public class ScrollPaneLog {
     public void clear() {
         text.setText("");
     }
-
 }

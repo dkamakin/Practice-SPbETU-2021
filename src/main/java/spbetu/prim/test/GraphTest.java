@@ -1,4 +1,4 @@
-package spbetu.prim.tests;
+package spbetu.prim.test;
 
 import org.junit.Assert;
 import org.junit.Before;

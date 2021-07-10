@@ -9,12 +9,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.ApplicationLogger;
-import spbetu.prim.loggers.ILogger;
 import spbetu.prim.viewmodel.EdgeView;
 import spbetu.prim.viewmodel.GraphView;
-import spbetu.prim.viewmodel.ScrollPaneLog;
 import spbetu.prim.window.AboutWindow;
 import spbetu.prim.window.FAQWindow;
 import spbetu.prim.window.InfoWindow;
@@ -35,17 +33,14 @@ public class View implements Initializable {
 
     @FXML
     public AnchorPane anchorPane;
-    public ScrollPaneLog scrollPaneLog;
+
     private GraphView viewModel;
     private ActionType actionType;
-    private ILogger logger;
     private boolean scrollPaneClickedFlag;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.scrollPaneLog = new ScrollPaneLog(logTextArea);
-        this.logger = new ApplicationLogger(new ScrollPaneLog(logTextArea));
-        this.viewModel = new GraphView();
+        this.viewModel = new GraphView(logTextArea);
         this.actionType = ActionType.ADD_NODE;
     }
 
@@ -150,7 +145,7 @@ public class View implements Initializable {
     }
 
     public void clearLoggingArea() {
-        logger.clear();      //Очистка окна с логами
+        viewModel.clearLogger();
     }
 
     public void cancelSelection() {
@@ -175,6 +170,8 @@ public class View implements Initializable {
         log.info("Next step in algorithm");
         if (viewModel.nextStep())
             new InfoWindow().show("The minimum spanning tree was found");
+
+        viewModel.updateLogger();
     }
 
     public void runClicked() {
@@ -197,12 +194,22 @@ public class View implements Initializable {
         viewModel.stopAlgorithm();
     }
 
-    public void openClicked() {
+    public String getFileName(Window ownerWindow) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open file");
 
+        return fileChooser.showOpenDialog(ownerWindow).getPath();
+    }
+
+    public void openClicked() {
+        String fileName = getFileName(anchorPane.getScene().getWindow());
+
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+
         List<EdgeView> graphFromFile = viewModel.readGraphFromFile(
-                fileChooser.showOpenDialog(anchorPane.getScene().getWindow()).getPath()
+                fileName
         );
 
         for (EdgeView elem : graphFromFile) {
@@ -219,8 +226,8 @@ public class View implements Initializable {
                     elem.getTo()
             );
 
-            pane.setLayoutY(anchorPane.getScene().getHeight() / 2);
-            pane.setLayoutX(anchorPane.getScene().getWidth() / 2);
+            pane.setLayoutY(anchorPane.getScene().getHeight() / 2.3);
+            pane.setLayoutX(anchorPane.getScene().getWidth() / 2.5);
 
             anchorPane.getChildren().add(pane);
         }

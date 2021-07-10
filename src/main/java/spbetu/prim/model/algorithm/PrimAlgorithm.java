@@ -1,7 +1,7 @@
 package spbetu.prim.model.algorithm;
 
-import spbetu.prim.loggers.ConsoleLogger;
-import spbetu.prim.loggers.ILogger;
+import spbetu.prim.logger.ConsoleLogger;
+import spbetu.prim.logger.ILogger;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.graph.Vertex;
@@ -14,22 +14,12 @@ import java.util.Stack;
 
 public class PrimAlgorithm {
 
-    private final Graph graph;  // сам граф
-
-    private final Stack<Edge<Double>> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
-
-    private final ILogger logger;
     private static PrimAlgorithm instance;
+    private final Graph graph;  // сам граф
+    private final Stack<Edge<Double>> spanningTree; // остовное дерево (вершина куда (последняя посещенная) и ребро в нее)
+    private final ILogger logger;
 
-
-    public static PrimAlgorithm getInstanceWithLogger(Graph graph, ILogger logger) {
-        if (instance == null) {
-            instance = new PrimAlgorithm(graph, logger);
-        }
-        return instance;
-    }
-
-   public PrimAlgorithm(Graph graph) {  // можно ли использовать singleton в тестах?
+    public PrimAlgorithm(Graph graph) {  // можно ли использовать singleton в тестах?
         this.graph = graph;
         this.logger = new ConsoleLogger();
         this.spanningTree = new Stack<>();
@@ -39,6 +29,14 @@ public class PrimAlgorithm {
         this.graph = graph;
         this.logger = logger;
         this.spanningTree = new Stack<>();
+    }
+
+    public static PrimAlgorithm getInstanceWithLogger(Graph graph, ILogger logger) {
+        if (instance == null) {
+            instance = new PrimAlgorithm(graph, logger);
+        }
+
+        return instance;
     }
 
     public void runAlgorithm() {
@@ -58,7 +56,7 @@ public class PrimAlgorithm {
         } else
             return null;
 
-        Edge<Double> nextMinimumEdge = new Edge(Double.MAX_VALUE, null, null); // для минимального ребра
+        Edge<Double> nextMinimumEdge = new Edge<>(Double.MAX_VALUE, null, null); // для минимального ребра
         // ?????? как быть с generic
         Vertex nextVertex = graph.getVertex(0);  // следующая вершина, куда перейдем (инициализируем первой, т.к. она посещена в самом начале)
 
@@ -67,7 +65,7 @@ public class PrimAlgorithm {
         for (Vertex vertex : graph.getVertices()) { // рассматриваем все вершины графа
 
             if (vertex.isVisited()) {  // если вершина посещена
-                logger.info("Looking at edges of " + vertex.getNumber() + " vertex");
+                logger.append("Looking at edges of " + vertex.getNumber() + " vertex" + '\n');
                 Edge<Double> candidate = vertex.getMinimum();
 
                 if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
@@ -76,26 +74,25 @@ public class PrimAlgorithm {
                     thisVertex = vertex;
                 }
             }
-
         }
 
         nextMinimumEdge.setIncluded(true);  // ребро включили
         nextVertex.setVisited(true); // вершину посетили
 
-        addEdgeToSpanningTree(thisVertex, nextVertex, nextMinimumEdge.getWeight());  // добавили в остов
-
         if (nextMinimumEdge.getVertexTo() == null || nextMinimumEdge.getVertexFrom() == null)
             return null;
 
-        logger.info("In result added edge " + nextMinimumEdge.getVertexFrom().getNumber()
-                + "-" + nextMinimumEdge.getVertexTo().getNumber() + " with weight " + nextMinimumEdge.getWeight());
-        logger.info(nextVertex.getNumber() + " vertex was visited");
+        addEdgeToSpanningTree(thisVertex, nextVertex, nextMinimumEdge.getWeight());  // добавили в остов
+
+        logger.append("In result added edge " + nextMinimumEdge.getVertexFrom().getNumber()
+                + "-" + nextMinimumEdge.getVertexTo().getNumber() + " with weight " + nextMinimumEdge.getWeight() + '\n');
+        logger.append(nextVertex.getNumber() + " vertex was visited\n");
 
         return nextMinimumEdge;
     }
 
     public void addEdgeToSpanningTree(Vertex from, Vertex to, Double edgeWeight) {
-        Edge<Double> edge = new Edge(edgeWeight, from, to);
+        Edge<Double> edge = new Edge<>(edgeWeight, from, to);
         spanningTree.push(edge);
     }
 

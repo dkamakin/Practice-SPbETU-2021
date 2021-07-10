@@ -2,14 +2,14 @@ package spbetu.prim.viewmodel;
 
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.loggers.ConsoleLogger;
+import spbetu.prim.logger.ApplicationLogger;
 import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
@@ -26,19 +26,25 @@ public class GraphView {
     private final GraphVisualizer visualizer;
     private final PrimAlgorithm algorithm;
     private final Graph graph;
+    private final ApplicationLogger applicationLogger;
     private List<EdgeView> edges;
     private int currId;
     private StackPane prevStackPane;
     private AlgorithmTask algorithmTask;
 
-    public GraphView() {
+    public GraphView(ScrollPane scrollPane) {
         this.currId = 0;
         this.prevStackPane = null;
         this.visualizer = new GraphVisualizer();
         this.edges = new ArrayList<>();
         this.graph = new Graph();
-        this.algorithm = PrimAlgorithm.getInstanceWithLogger(graph, new ConsoleLogger());
+        this.applicationLogger = new ApplicationLogger(new ScrollPaneLog(scrollPane));
+        this.algorithm = PrimAlgorithm.getInstanceWithLogger(graph, applicationLogger);
         this.algorithmTask = null;
+    }
+
+    public void clearLogger() {
+        applicationLogger.clear();
     }
 
     public void clear() {
@@ -62,6 +68,7 @@ public class GraphView {
             fileLoader.loadGraph(graph);
         } catch (FileNotFoundException e) {
             log.error("Couldn't read from the file: " + e.getMessage());
+            return null;
         }
 
         currId = graph.getSize();
@@ -78,8 +85,10 @@ public class GraphView {
             return;
 
         log.info("Move");
-        prevStackPane.setLayoutX(x);
-        prevStackPane.setLayoutY(y);
+        int radius = (int) ((Circle)  prevStackPane.getChildren().get(0))
+                .getRadius();
+        prevStackPane.setLayoutX(x - radius);
+        prevStackPane.setLayoutY(y - radius);
     }
 
     public void removeVertexWithEdges(Node node) {
@@ -139,18 +148,22 @@ public class GraphView {
 
             if (numberFrom == from && numberTo == to) {
                 log.info("Found the prev step");
-                paintCircle(elem.getTo(), Color.ORCHID);
-                paintLine(elem.getLine(), Color.BLACK, 1);
+                visualizer.paintCircle(elem.getTo(), Color.ORCHID);
+                visualizer.paintLine(elem.getLine(), Color.BLACK, 1);
                 return;
             } else if (numberFrom == to && numberTo == from) {
                 log.info("Found the prev step");
-                paintCircle(elem.getFrom(), Color.ORCHID);
-                paintLine(elem.getLine(), Color.BLACK, 1);
+                visualizer.paintCircle(elem.getFrom(), Color.ORCHID);
+                visualizer.paintLine(elem.getLine(), Color.BLACK, 1);
                 return;
             }
         }
 
         log.info("Didn't find the last step");
+    }
+
+    public void updateLogger() {
+        applicationLogger.update();
     }
 
     public boolean nextStep() {
@@ -167,13 +180,16 @@ public class GraphView {
     }
 
     public void runAlgorithm() {
-        algorithmTask = new AlgorithmTask(this);
+        algorithmTask = new AlgorithmTask(this, applicationLogger);
         algorithmTask.setOnSucceeded(this::doneRun);
         new Thread(algorithmTask).start();
     }
 
     public void stopAlgorithm() {
         log.info("Stop");
+        if (algorithmTask == null)
+            return;
+
         algorithmTask.setAlive(false);
     }
 
@@ -185,7 +201,17 @@ public class GraphView {
     }
 
     public boolean checkWeight(String weight) {
-        return weight == null || !weight.isEmpty();
+        if (weight == null || weight.isEmpty())
+            return false;
+
+        try {
+            Double.parseDouble(weight);
+        } catch (NumberFormatException e) {
+            log.error("Wrong weight");
+            return false;
+        }
+
+        return true;
     }
 
     public Pane addEdge(StackPane secondVertex, String weight) {
@@ -220,7 +246,7 @@ public class GraphView {
     }
 
     public void addEdgeToTree(int firstNode, int secondNode, Double weight) {
-        log.info("Adding an edge to the tree: ({}) - ({}), weight: {}",
+        log.info("Add an edge to the tree: ({}) - ({}), weight: {}",
                 firstNode, secondNode, weight);
 
         for (EdgeView elem : edges) {
@@ -230,24 +256,14 @@ public class GraphView {
             if (firstNode == getNodeId(first) && secondNode == getNodeId(second)) {
                 log.info("Found the edge in the list of edgeview");
                 Color color = Color.BLUE;
-                paintCircle(first, color);
-                paintCircle(second, color);
-                paintLine(elem.getLine(), color, 3);
+                visualizer.paintCircle(first, color);
+                visualizer.paintCircle(second, color);
+                visualizer.paintLine(elem.getLine(), color, 3);
                 return;
             }
         }
 
         log.info("Didn't find the edge in the list of edgeview");
-    }
-
-    public void paintCircle(StackPane stackPane, Color color) {
-        Circle circle = (Circle) stackPane.getChildren().get(0);
-        circle.setFill(color);
-    }
-
-    public void paintLine(Line line, Color color, int width) {
-        line.setStrokeWidth(width);
-        line.setStroke(color);
     }
 
     public int getNodeId(StackPane stackPane) {
@@ -257,9 +273,9 @@ public class GraphView {
 
     public void resetGraph() {
         for (EdgeView elem : edges) {
-            paintCircle(elem.getFrom(), Color.ORCHID);
-            paintCircle(elem.getTo(), Color.ORCHID);
-            paintLine(elem.getLine(), Color.BLACK, 1);
+            visualizer.paintCircle(elem.getFrom(), Color.ORCHID);
+            visualizer.paintCircle(elem.getTo(), Color.ORCHID);
+            visualizer.paintLine(elem.getLine(), Color.BLACK, 1);
         }
 
         algorithm.restart();
