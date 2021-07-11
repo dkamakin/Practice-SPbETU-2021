@@ -73,7 +73,7 @@ public class PrimAlgorithm {
                                 + candidate.getVertexFrom().getNumber() + "-" + candidate.getVertexTo().getNumber() +
                                 " " + candidate.getWeight() + '\n');
                     else {
-                        logger.append("Vertex № " + vertex.getNumber() + " doesn't have not included edges.\n");
+                        logger.append("Vertex {" + vertex.getNumber() + "} doesn't have not included edges.\n");
                         continue;
                     }
 
@@ -96,7 +96,7 @@ public class PrimAlgorithm {
 
             logger.append("\tADDED TO SPANNING TREE:\n " + nextMinimumEdge.getVertexFrom().getNumber()
                     + "-" + nextMinimumEdge.getVertexTo().getNumber() + " " + nextMinimumEdge.getWeight() + '\n');
-            logger.append("Vertex № " + nextVertex.getNumber() + " is visited now\n");
+            logger.append("Vertex {" + nextVertex.getNumber() + "} is visited now\n");
 
             return nextMinimumEdge;
 
