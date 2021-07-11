@@ -10,7 +10,6 @@ import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.loader.FileLoader;
 import spbetu.prim.model.saver.FileSaver;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,13 +150,13 @@ public class ViewModel {
         }
     }
 
-    public void saveGraphToFile(String fileName){
+    public void saveGraphToFile(String fileName) {
         log.info("Trying to write to {}", fileName);
 
-        try{
+        try {
             FileSaver fileSaver = new FileSaver(fileName);
             fileSaver.saveGraph(graph, algorithm);
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             log.error("Couldn't write to the file: " + e.getMessage());
         }
     }

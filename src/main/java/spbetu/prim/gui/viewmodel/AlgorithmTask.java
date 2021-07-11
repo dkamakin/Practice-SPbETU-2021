@@ -1,6 +1,5 @@
 package spbetu.prim.gui.viewmodel;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.logger.ILogger;
@@ -9,12 +8,10 @@ import spbetu.prim.logger.ILogger;
 public class AlgorithmTask extends Task<Void> {
 
     private final GraphView graphView;
-    private final ILogger logger;
     private boolean isAlive;
 
-    public AlgorithmTask(GraphView graphView, ILogger logger) {
+    public AlgorithmTask(GraphView graphView) {
         this.graphView = graphView;
-        this.logger = logger;
         this.isAlive = true;
     }
 

@@ -247,9 +247,9 @@ public class View implements Initializable {
         }
     }
 
-    public void saveClicked(){
+    public void saveClicked() {
 
-        if(viewModel.getFileName() == null){
+        if (viewModel.getFileName() == null) {
             saveAsClicked();
             return;
         }
@@ -258,13 +258,13 @@ public class View implements Initializable {
         viewModel.saveGraphToFile(fileName);
     }
 
-    public void saveAsClicked(){
+    public void saveAsClicked() {
         String fileName = getFileName(anchorPane.getScene().getWindow());
         viewModel.setFileName(fileName);
         viewModel.saveGraphToFile(fileName);
     }
 
-    public String getDirectoryName(Window ownerWindow){
+    public String getDirectoryName(Window ownerWindow) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Choose directory");
         File file = directoryChooser.showDialog(ownerWindow);
@@ -283,16 +283,16 @@ public class View implements Initializable {
     public void newFileClicked() throws IOException {
         StringBuilder fileName = new StringBuilder(getDirectoryName(anchorPane.getScene().getWindow()));
 
-        if(fileName.isEmpty()){
+        if (fileName.toString().isEmpty()) {
             log.info("Couldn't open the directory");
             return;
         }
 
-        fileName.append("/" + askFileName() + ".txt");
+        fileName.append("/").append(askFileName()).append(".txt");
         File file = new File(fileName.toString());
-        if(file.createNewFile()){
+        if (file.createNewFile()) {
             log.info("Create new file");
-        }else {
+        } else {
             log.info("File already exists");
         }
 

@@ -85,19 +85,19 @@ public class GraphView {
     public void saveGraphToFile(String fileName) {
         log.info("Trying to save to {}", fileName);
 
-        try{
+        try {
             FileSaver fileSaver = new FileSaver(fileName);
             fileSaver.saveGraph(graph, algorithm);
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             log.error("Couldn't save to the file: " + e.getMessage());
         }
     }
 
-    public String getFileName(){
+    public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName){
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
@@ -205,7 +205,7 @@ public class GraphView {
     }
 
     public void runAlgorithm() {
-        algorithmTask = new AlgorithmTask(this, applicationLogger);
+        algorithmTask = new AlgorithmTask(this);
         algorithmTask.setOnSucceeded(this::doneRun);
         new Thread(algorithmTask).start();
     }

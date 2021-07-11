@@ -6,8 +6,6 @@ import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.graph.Vertex;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
@@ -55,50 +53,50 @@ public class PrimAlgorithm {
             graph.getVertex(0).setVisited(true);  // посещаем первую вершину
         } else return null;
 
-            Edge<Double> nextMinimumEdge = new Edge<>(Double.MAX_VALUE, null, null); // для минимального ребра
+        Edge<Double> nextMinimumEdge = new Edge<>(Double.MAX_VALUE, null, null); // для минимального ребра
 
-            Vertex nextVertex = graph.getVertex(0);  // следующая вершина, куда перейдем (инициализируем первой, т.к. она посещена в самом начале)
+        Vertex nextVertex = graph.getVertex(0);  // следующая вершина, куда перейдем (инициализируем первой, т.к. она посещена в самом начале)
 
-            Vertex thisVertex = null;
+        Vertex thisVertex = null;
 
-            for (Vertex vertex : graph.getVertices()) { // рассматриваем все вершины графа
+        for (Vertex vertex : graph.getVertices()) { // рассматриваем все вершины графа
 
-                if (vertex.isVisited()) {  // если вершина посещена
-                    logger.append("\nVertex {" + vertex.getNumber() + "} is already visited.\n" +
-                            "\tLooking at edges of " + vertex.getNumber() + " vertex" + '\n');
+            if (vertex.isVisited()) {  // если вершина посещена
+                logger.append("\nVertex {" + vertex.getNumber() + "} is already visited.\n" +
+                        "\tLooking at edges of " + vertex.getNumber() + " vertex" + '\n');
 
-                    Edge<Double> candidate = vertex.getMinimum();
-                    if (candidate.getVertexTo() != null && candidate.getVertexFrom() != null)
-                        logger.append("The minimum not included edge of " + vertex.getNumber() + " vertex:\n "
-                                + candidate.getVertexFrom().getNumber() + "-" + candidate.getVertexTo().getNumber() +
-                                " " + candidate.getWeight() + '\n');
-                    else {
-                        logger.append("Vertex № " + vertex.getNumber() + " doesn't have not included edges.\n");
-                        continue;
-                    }
+                Edge<Double> candidate = vertex.getMinimum();
+                if (candidate.getVertexTo() != null && candidate.getVertexFrom() != null)
+                    logger.append("The minimum not included edge of " + vertex.getNumber() + " vertex:\n "
+                            + candidate.getVertexFrom().getNumber() + "-" + candidate.getVertexTo().getNumber() +
+                            " " + candidate.getWeight() + '\n');
+                else {
+                    logger.append("Vertex {" + vertex.getNumber() + "} doesn't have not included edges.\n");
+                    continue;
+                }
 
 
-                    if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
-                        nextMinimumEdge = candidate;
-                        nextVertex = candidate.getNextVertex();
-                        thisVertex = vertex;
-                    }
+                if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
+                    nextMinimumEdge = candidate;
+                    nextVertex = candidate.getNextVertex();
+                    thisVertex = vertex;
                 }
             }
+        }
 
-            if (nextMinimumEdge.getVertexTo() == null || nextMinimumEdge.getVertexFrom() == null)
-                return null;
+        if (nextMinimumEdge.getVertexTo() == null || nextMinimumEdge.getVertexFrom() == null)
+            return null;
 
-            nextMinimumEdge.setIncluded(true);  // ребро включили
-            nextVertex.setVisited(true); // вершину посетили
+        nextMinimumEdge.setIncluded(true);  // ребро включили
+        nextVertex.setVisited(true); // вершину посетили
 
-            addEdgeToSpanningTree(thisVertex, nextVertex, nextMinimumEdge.getWeight());  // добавили в остов
+        addEdgeToSpanningTree(thisVertex, nextVertex, nextMinimumEdge.getWeight());  // добавили в остов
 
-            logger.append("\tADDED TO SPANNING TREE:\n " + nextMinimumEdge.getVertexFrom().getNumber()
-                    + "-" + nextMinimumEdge.getVertexTo().getNumber() + " " + nextMinimumEdge.getWeight() + '\n');
-            logger.append("Vertex № " + nextVertex.getNumber() + " is visited now\n");
+        logger.append("\tADDED TO SPANNING TREE:\n " + nextMinimumEdge.getVertexFrom().getNumber()
+                + "-" + nextMinimumEdge.getVertexTo().getNumber() + " " + nextMinimumEdge.getWeight() + '\n');
+        logger.append("Vertex {" + nextVertex.getNumber() + "} is visited now\n");
 
-            return nextMinimumEdge;
+        return nextMinimumEdge;
 
     }
 

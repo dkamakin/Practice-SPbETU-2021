@@ -11,16 +11,14 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 @Slf4j
 public class FileSaver implements ISaver {
 
-    private File file;
+    private final File file;
 
-    public FileSaver(String fileName) throws FileNotFoundException{
+    public FileSaver(String fileName) throws FileNotFoundException {
         file = new File(fileName);
 
         if (!file.exists())
@@ -28,9 +26,8 @@ public class FileSaver implements ISaver {
     }
 
     @Override
-    public void saveGraph(Graph graph, PrimAlgorithm primAlgorithm){
-        try (FileWriter writer = new FileWriter(file, false))
-        {
+    public void saveGraph(Graph graph, PrimAlgorithm primAlgorithm) {
+        try (FileWriter writer = new FileWriter(file, false)) {
             for (Vertex vertex : graph.getVertices()) {
                 Set<HashMap.Entry<Vertex, Edge<Double>>> set = vertex.getEdges().entrySet();
                 for (HashMap.Entry<Vertex, Edge<Double>> edge : set) {
