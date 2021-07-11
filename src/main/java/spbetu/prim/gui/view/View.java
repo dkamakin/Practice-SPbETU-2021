@@ -109,7 +109,10 @@ public class View implements Initializable {
     }
 
     public void weightClicked(MouseEvent mouseEvent) {
-        if (actionType == ActionType.DELETE) {
+        if (actionType == ActionType.MOVE ||
+            actionType == ActionType.MOVE_CHOOSE) {
+            return;
+        } if (actionType == ActionType.DELETE) {
             log.info("Removing the weight");
             viewModel.removeEdgeByWeight((Text) mouseEvent.getSource());
             return;
