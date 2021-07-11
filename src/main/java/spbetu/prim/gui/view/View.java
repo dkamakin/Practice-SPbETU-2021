@@ -13,6 +13,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.exception.GraphInputException;
+import spbetu.prim.gui.gui_commands.*;
+import spbetu.prim.gui.gui_commands.algorithm_commands.NextStepCommand;
+import spbetu.prim.gui.gui_commands.algorithm_commands.PreviousStepCommand;
+import spbetu.prim.gui.gui_commands.algorithm_commands.RunAlgorithmCommand;
+import spbetu.prim.gui.gui_commands.algorithm_commands.StopAlgorithmCommand;
+import spbetu.prim.gui.gui_commands.logger_commands.ClearLoggerCommand;
+import spbetu.prim.gui.gui_commands.logger_commands.UpdateLoggerCommand;
+import spbetu.prim.gui.gui_commands.node_clear_commands.*;
+import spbetu.prim.gui.gui_commands.node_clear_commands.MoveVertexCommand;
+import spbetu.prim.gui.gui_commands.node_clear_commands.ResetGraphCommand;
+import spbetu.prim.gui.gui_commands.savefile_commands.SaveAsClickedCommand;
+import spbetu.prim.gui.gui_commands.savefile_commands.SaveFileClickedCommand;
 import spbetu.prim.gui.viewmodel.EdgeView;
 import spbetu.prim.gui.viewmodel.GraphView;
 import spbetu.prim.gui.window.*;
@@ -25,6 +37,7 @@ import java.util.ResourceBundle;
 
 @Slf4j
 public class View implements Initializable {
+    private Command command;
 
     @FXML
     public ScrollPane logTextArea;
@@ -56,9 +69,9 @@ public class View implements Initializable {
         switch (actionType) {
             case ADD_NODE:
                 log.info("Adding a node");
-                StackPane stackPane = viewModel.addNode(
-                        mouseEvent.getX(), mouseEvent.getY()
-                );
+                command = new AddNodeCommand(mouseEvent.getX(), mouseEvent.getY());    // command
+                command.execute(viewModel);
+                StackPane stackPane = viewModel.getAddNode();
                 anchorPane.getChildren().add(stackPane);
                 stackPane.setOnMouseClicked(this::stackPaneClicked);
                 break;
@@ -66,7 +79,8 @@ public class View implements Initializable {
                 actionType = ActionType.ADD_NODE;
                 break;
             case MOVE:
-                viewModel.moveVertex(mouseEvent.getX(), mouseEvent.getY());
+                command = new MoveVertexCommand(mouseEvent.getX(), mouseEvent.getY());  // command
+                command.execute(viewModel);
                 break;
             default:
                 break;
@@ -76,18 +90,23 @@ public class View implements Initializable {
     public void stackPaneClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.DELETE) {
             log.info("Removing the stackPane");
-            viewModel.removeVertexWithEdges((StackPane) mouseEvent.getSource());
+            command = new RemoveVertexWithEdgesCommand((StackPane) mouseEvent.getSource());   // command
+            command.execute(viewModel);
             return;
+
         } else if (actionType == ActionType.MOVE_CHOOSE ||
                 actionType == ActionType.MOVE) {
             log.info("Chose the vertex to move");
             actionType = ActionType.MOVE;
-            viewModel.chooseNode((StackPane) mouseEvent.getSource());
+            command = new ChooseNodeCommand((StackPane) mouseEvent.getSource());   // command
+            command.execute(viewModel);
             return;
+
         } else if (actionType != ActionType.CONNECT_NODES) {
             log.info("StackPane clicked. The node was chosen");
             actionType = ActionType.CONNECT_NODES;
-            viewModel.chooseNode((StackPane) mouseEvent.getSource());
+            command = new ChooseNodeCommand((StackPane) mouseEvent.getSource());   // command
+            command.execute(viewModel);
             return;
         }
 
@@ -114,7 +133,8 @@ public class View implements Initializable {
             return;
         } if (actionType == ActionType.DELETE) {
             log.info("Removing the weight");
-            viewModel.removeEdgeByWeight((Text) mouseEvent.getSource());
+            command = new RemoveEdgeByWeightCommand((Text) mouseEvent.getSource()); // command
+            command.execute(viewModel);
             return;
         }
 
@@ -127,6 +147,7 @@ public class View implements Initializable {
             log.warn("Wrong weight");
     }
 
+
     public String askWeight() {
         log.info("Showing the weight window");
         actionType = ActionType.CHANGE_WEIGHT;
@@ -136,7 +157,8 @@ public class View implements Initializable {
     public void clearClicked() {
         log.info("Clearing the scene");
         anchorPane.getChildren().remove(2, anchorPane.getChildren().size());
-        viewModel.clear();
+        command = new ClearCommand();       // command
+        command.execute(viewModel);
     }
 
     public void deleteClicked() {
@@ -155,7 +177,8 @@ public class View implements Initializable {
     }
 
     public void clearLoggingArea() {
-        viewModel.clearLogger();
+        command = new ClearLoggerCommand();   // command
+        command.execute(viewModel);
     }
 
     public void cancelSelection() {
@@ -178,30 +201,37 @@ public class View implements Initializable {
 
     public void nextStepClicked() {
         log.info("Next step in algorithm");
-        if (viewModel.nextStep())
+        command = new NextStepCommand();             // command
+
+        if (command.execute(viewModel))
             new InfoWindow().show("The minimum spanning tree was found");
 
-        viewModel.updateLogger();
+        command = new UpdateLoggerCommand();     // command
+        command.execute(viewModel);
     }
 
     public void runClicked() {
         log.info("Run algorithm");
-        viewModel.runAlgorithm();
+        command = new RunAlgorithmCommand();     // command
+        command.execute(viewModel);
     }
 
     public void resetClicked() {
         log.info("Reset the algorithm");
-        viewModel.resetGraph();
+        command = new ResetGraphCommand();     // command
+        command.execute(viewModel);
     }
 
     public void prevStepClicked() {
         log.info("Prev step clicked");
-        viewModel.previousStep();
+        command = new PreviousStepCommand();     // command
+        command.execute(viewModel);
     }
 
     public void stopPressed() {
         log.info("Stop algorithm");
-        viewModel.stopAlgorithm();
+        command = new StopAlgorithmCommand();     // command
+        command.execute(viewModel);
     }
 
     public String getFileName(Window ownerWindow) {
@@ -257,14 +287,13 @@ public class View implements Initializable {
             return;
         }
 
-        String fileName = viewModel.getFileName();
-        viewModel.saveGraphToFile(fileName);
+        command = new SaveFileClickedCommand(viewModel.getFileName());   // command
+        command.execute(viewModel);
     }
 
     public void saveAsClicked() {
-        String fileName = getFileName(anchorPane.getScene().getWindow());
-        viewModel.setFileName(fileName);
-        viewModel.saveGraphToFile(fileName);
+        command = new SaveAsClickedCommand(getFileName(anchorPane.getScene().getWindow()));   // command
+        command.execute(viewModel);
     }
 
     public String getDirectoryName(Window ownerWindow) {
