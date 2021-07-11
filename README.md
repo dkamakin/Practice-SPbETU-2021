@@ -51,7 +51,7 @@ java --module-path javafx\macos\lib --add-modules javafx.controls,javafx.fxml -j
 Choose the first one then the second one and type the weigth
 ## I've selected the wrong node to connect! How can I cancel the selection?
 Press ESC
-## I typed the wrong weigth!
+## I typed the wrong weight!
 Click on the weight to change
 ## How can I move a node?
 Click on the "Move" button, then select the node that you want to move, then click on any available space
