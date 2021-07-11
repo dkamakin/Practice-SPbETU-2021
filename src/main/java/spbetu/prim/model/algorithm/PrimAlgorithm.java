@@ -65,6 +65,7 @@ public class PrimAlgorithm {
                 logger.append("\nVertex {" + vertex.getNumber() + "} is already visited.\n" +
                         "\tLooking at edges of " + vertex.getNumber() + " vertex" + '\n');
 
+
                 Edge<Double> candidate = vertex.getMinimum();
                 if (candidate.getVertexTo() != null && candidate.getVertexFrom() != null)
                     logger.append("The minimum not included edge of " + vertex.getNumber() + " vertex:\n "
@@ -74,7 +75,6 @@ public class PrimAlgorithm {
                     logger.append("Vertex {" + vertex.getNumber() + "} doesn't have not included edges.\n");
                     continue;
                 }
-
 
                 if (candidate.getWeight() < nextMinimumEdge.getWeight()) { // проверка на минимум
                     nextMinimumEdge = candidate;
