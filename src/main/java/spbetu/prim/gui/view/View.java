@@ -13,18 +13,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.exception.GraphInputException;
-import spbetu.prim.gui.gui_commands.*;
-import spbetu.prim.gui.gui_commands.algorithm_commands.NextStepCommand;
-import spbetu.prim.gui.gui_commands.algorithm_commands.PreviousStepCommand;
-import spbetu.prim.gui.gui_commands.algorithm_commands.RunAlgorithmCommand;
-import spbetu.prim.gui.gui_commands.algorithm_commands.StopAlgorithmCommand;
-import spbetu.prim.gui.gui_commands.logger_commands.ClearLoggerCommand;
-import spbetu.prim.gui.gui_commands.logger_commands.UpdateLoggerCommand;
-import spbetu.prim.gui.gui_commands.node_clear_commands.*;
-import spbetu.prim.gui.gui_commands.node_clear_commands.MoveVertexCommand;
-import spbetu.prim.gui.gui_commands.node_clear_commands.ResetGraphCommand;
-import spbetu.prim.gui.gui_commands.savefile_commands.SaveAsClickedCommand;
-import spbetu.prim.gui.gui_commands.savefile_commands.SaveFileClickedCommand;
+import spbetu.prim.gui.command.Command;
+import spbetu.prim.gui.command.algorithm.NextStepCommand;
+import spbetu.prim.gui.command.algorithm.PreviousStepCommand;
+import spbetu.prim.gui.command.algorithm.RunAlgorithmCommand;
+import spbetu.prim.gui.command.algorithm.StopAlgorithmCommand;
+import spbetu.prim.gui.command.logger.ClearLoggerCommand;
+import spbetu.prim.gui.command.logger.UpdateLoggerCommand;
+import spbetu.prim.gui.command.node.*;
+import spbetu.prim.gui.command.savefile.SaveAsClickedCommand;
+import spbetu.prim.gui.command.savefile.SaveFileClickedCommand;
 import spbetu.prim.gui.viewmodel.EdgeView;
 import spbetu.prim.gui.viewmodel.GraphView;
 import spbetu.prim.gui.window.*;
@@ -37,17 +35,13 @@ import java.util.ResourceBundle;
 
 @Slf4j
 public class View implements Initializable {
-    private Command command;
-
     @FXML
     public ScrollPane logTextArea;
-
     @FXML
     public AnchorPane secondAnchorPane;
-
     @FXML
     public AnchorPane anchorPane;
-
+    private Command command;
     private GraphView viewModel;
     private ActionType actionType;
     private boolean scrollPaneClickedFlag;
@@ -129,9 +123,9 @@ public class View implements Initializable {
 
     public void weightClicked(MouseEvent mouseEvent) {
         if (actionType == ActionType.MOVE ||
-            actionType == ActionType.MOVE_CHOOSE) {
+                actionType == ActionType.MOVE_CHOOSE) {
             return;
-        } if (actionType == ActionType.DELETE) {
+        } else if (actionType == ActionType.DELETE) {
             log.info("Removing the weight");
             command = new RemoveEdgeByWeightCommand((Text) mouseEvent.getSource()); // command
             command.execute(viewModel);
@@ -146,7 +140,6 @@ public class View implements Initializable {
         else
             log.warn("Wrong weight");
     }
-
 
     public String askWeight() {
         log.info("Showing the weight window");

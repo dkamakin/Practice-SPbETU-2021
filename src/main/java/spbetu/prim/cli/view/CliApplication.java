@@ -1,14 +1,14 @@
 package spbetu.prim.cli.view;
 
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.cli.cli_commands.*;
-import spbetu.prim.cli.cli_commands.add_delete_commands.AddEdgeCommand;
-import spbetu.prim.cli.cli_commands.add_delete_commands.DeleteEdgeCommand;
-import spbetu.prim.cli.cli_commands.algorithm_commands.NextStepCommand;
-import spbetu.prim.cli.cli_commands.algorithm_commands.PreviousStepCommand;
-import spbetu.prim.cli.cli_commands.algorithm_commands.RunAlgorithmCommand;
-import spbetu.prim.cli.cli_commands.file_commands.ReadFromFileCommand;
-import spbetu.prim.cli.cli_commands.file_commands.SaveToFileCommand;
+import spbetu.prim.cli.command.Command;
+import spbetu.prim.cli.command.algorithm.NextStepCommand;
+import spbetu.prim.cli.command.algorithm.PreviousStepCommand;
+import spbetu.prim.cli.command.algorithm.RunAlgorithmCommand;
+import spbetu.prim.cli.command.edge.AddEdgeCommand;
+import spbetu.prim.cli.command.edge.DeleteEdgeCommand;
+import spbetu.prim.cli.command.file.ReadFromFileCommand;
+import spbetu.prim.cli.command.file.SaveToFileCommand;
 import spbetu.prim.cli.viewmodel.ViewModel;
 import spbetu.prim.exception.GraphInputException;
 
@@ -71,7 +71,7 @@ public class CliApplication {
                     break;
 
                 case "3":
-                  //  viewModel.nextStep();
+                    //  viewModel.nextStep();
                     command = new NextStepCommand();
                     command.execute(viewModel);
                     break;
@@ -79,7 +79,6 @@ public class CliApplication {
                 case "4":
                     command = new PreviousStepCommand();
                     command.execute(viewModel);
-
                     break;
 
                 case "5":

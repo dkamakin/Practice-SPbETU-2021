@@ -2,7 +2,6 @@ package spbetu.prim.gui.viewmodel;
 
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
-import spbetu.prim.logger.ILogger;
 
 @Slf4j
 public class AlgorithmTask extends Task<Void> {
