@@ -5,6 +5,8 @@ import spbetu.prim.logger.ILogger;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.graph.Vertex;
+import spbetu.prim.model.graph.builder.pattern.Director;
+import spbetu.prim.model.graph.builder.pattern.MaxEdgeBuilder;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -53,7 +55,10 @@ public class PrimAlgorithm {
             graph.getVertex(0).setVisited(true);  // посещаем первую вершину
         } else return null;
 
-        Edge<Double> nextMinimumEdge = new Edge<>(Double.MAX_VALUE, null, null); // для минимального ребра
+        Director director = new Director();
+        MaxEdgeBuilder<Double> builder = new MaxEdgeBuilder<>();
+        director.constructMaxEdge(builder);
+        Edge<Double> nextMinimumEdge = builder.getResult();
 
         Vertex nextVertex = graph.getVertex(0);  // следующая вершина, куда перейдем (инициализируем первой, т.к. она посещена в самом начале)
 
