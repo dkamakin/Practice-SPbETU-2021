@@ -1,6 +1,14 @@
 package spbetu.prim.cli.view;
 
 import lombok.extern.slf4j.Slf4j;
+import spbetu.prim.cli.command.Command;
+import spbetu.prim.cli.command.algorithm.NextStepCommand;
+import spbetu.prim.cli.command.algorithm.PreviousStepCommand;
+import spbetu.prim.cli.command.algorithm.RunAlgorithmCommand;
+import spbetu.prim.cli.command.edge.AddEdgeCommand;
+import spbetu.prim.cli.command.edge.DeleteEdgeCommand;
+import spbetu.prim.cli.command.file.ReadFromFileCommand;
+import spbetu.prim.cli.command.file.SaveToFileCommand;
 import spbetu.prim.cli.viewmodel.ViewModel;
 import spbetu.prim.exception.GraphInputException;
 
@@ -25,10 +33,11 @@ public class CliApplication {
                 "Your action: ");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GraphInputException {
         ViewModel viewModel = new ViewModel();
         Scanner scanner = new Scanner(System.in);
         String action;
+        Command command;
 
         outputHelp();
         while (!(action = scanner.next()).equals("0")) {
@@ -37,28 +46,47 @@ public class CliApplication {
                 case "1":
                     try {
                         System.out.print("Input an edge with weight (example: 1 - 2 3): ");
-                        viewModel.addEdge(scanner.nextLine());
+
+                        // command
+                        command = new AddEdgeCommand(scanner.nextLine());
+                        command.execute(viewModel);
+
                     } catch (GraphInputException e) {
                         log.error(e.getMessage());
                     }
+
                     break;
+
                 case "2":
                     try {
                         System.out.print("Input and edge (example: 1 - 2): ");
-                        viewModel.deleteEdge(scanner.nextLine());
+                        // command
+                        command = new DeleteEdgeCommand(scanner.nextLine());
+                        command.execute(viewModel);
+
+
                     } catch (GraphInputException e) {
                         log.error(e.getMessage());
                     }
                     break;
+
                 case "3":
-                    viewModel.nextStep();
+                    //  viewModel.nextStep();
+                    command = new NextStepCommand();
+                    command.execute(viewModel);
                     break;
+
                 case "4":
-                    viewModel.prevStep();
+                    command = new PreviousStepCommand();
+                    command.execute(viewModel);
                     break;
+
                 case "5":
-                    viewModel.runAlgorithm();
+
+                    command = new RunAlgorithmCommand();
+                    command.execute(viewModel);
                     break;
+
                 case "6":
                     List<String> edgeList = viewModel.outputGraph();
                     log.info("Current graph: ");
@@ -66,6 +94,7 @@ public class CliApplication {
                         log.info(edge);
                     }
                     break;
+
                 case "7":
                     List<String> edgeStack = viewModel.outputTree();
                     log.info("Current tree: ");
@@ -73,14 +102,21 @@ public class CliApplication {
                         log.info(string);
                     }
                     break;
+
                 case "8":
                     System.out.print("Input path to the file: ");
-                    viewModel.readGraphFromFile(scanner.nextLine());
+
+                    command = new ReadFromFileCommand(scanner.nextLine());
+                    command.execute(viewModel);
                     break;
+
                 case "9":
                     System.out.print("Input path to the file: ");
-                    viewModel.saveGraphToFile(scanner.nextLine());
+
+                    command = new SaveToFileCommand(scanner.nextLine());
+                    command.execute(viewModel);
                     break;
+
                 default:
                     break;
             }
