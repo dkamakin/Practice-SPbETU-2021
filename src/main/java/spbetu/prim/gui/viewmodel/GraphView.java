@@ -17,6 +17,7 @@ import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.loader.FileLoader;
+import spbetu.prim.model.saver.FileSaver;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class GraphView {
     private final PrimAlgorithm algorithm;
     private final Graph graph;
     private final ApplicationLogger applicationLogger;
+    private String fileName;
     private List<EdgeView> edges;
     private int currId;
     private StackPane prevStackPane;
@@ -52,6 +54,7 @@ public class GraphView {
     public void clear() {
         currId = 0;
         prevStackPane = null;
+        fileName = null;
         edges.clear();
         graph.clear();
         algorithm.restart();
@@ -68,6 +71,7 @@ public class GraphView {
             FileLoader fileLoader = new FileLoader(fileName);
             graph.clear();
             fileLoader.loadGraph(graph);
+            this.fileName = fileName;
         } catch (FileNotFoundException e) {
             log.error("Couldn't read from the file: " + e.getMessage());
             return null;
@@ -76,6 +80,25 @@ public class GraphView {
         currId = graph.getSize();
         edges = visualizer.visualize(graph, circleX, circleY);
         return edges;
+    }
+
+    public void saveGraphToFile(String fileName) {
+        log.info("Trying to save to {}", fileName);
+
+        try{
+            FileSaver fileSaver = new FileSaver(fileName);
+            fileSaver.saveGraph(graph, algorithm);
+        }catch (FileNotFoundException e){
+            log.error("Couldn't save to the file: " + e.getMessage());
+        }
+    }
+
+    public String getFileName(){
+        return fileName;
+    }
+
+    public void setFileName(String fileName){
+        this.fileName = fileName;
     }
 
     public void chooseNode(StackPane vertex) {

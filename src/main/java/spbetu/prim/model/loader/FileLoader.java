@@ -45,12 +45,12 @@ public class FileLoader implements ILoader {
                     return;
                 }
 
-                if (scanner.hasNextInt()) {
-                    edge = scanner.nextDouble();
+                if (scanner.hasNext()) {
+                    dash = scanner.next();
+                    edge = Double.parseDouble(dash);
                     if (edge > 32000)   // костыль
                         return;
                 } else {
-                    scanner.next();
                     log.info("Wrong weight");
                     return;
                 }

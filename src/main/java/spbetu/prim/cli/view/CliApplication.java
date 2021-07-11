@@ -79,7 +79,7 @@ public class CliApplication {
                     break;
                 case "9":
                     System.out.print("Input path to the file: ");
-                    viewModel.writeToFile(scanner.nextLine());
+                    viewModel.saveGraphToFile(scanner.nextLine());
                     break;
                 default:
                     break;

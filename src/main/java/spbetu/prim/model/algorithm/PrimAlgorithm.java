@@ -102,14 +102,10 @@ public class PrimAlgorithm {
 
     }
 
-
-
     public void addEdgeToSpanningTree(Vertex from, Vertex to, Double edgeWeight) {
         Edge<Double> edge = new Edge<>(edgeWeight, from, to);
         spanningTree.push(edge);
     }
-
-
 
     public Edge<Double> previousStep() {
         if (spanningTree.empty())
@@ -146,32 +142,6 @@ public class PrimAlgorithm {
                 me.getValue().setIncluded(false);    // ребра являются не включенными
         }
         spanningTree.clear();
-    }
-
-    public void writeToFile(String fileName) {
-        try (FileWriter writer = new FileWriter(fileName, false))  // файл перезаписывается
-        {
-            writer.write("Source graph:\n");
-            for (Vertex vertex : graph.getVertices()) {
-                Set<HashMap.Entry<Vertex, Edge<Double>>> set = vertex.getEdges().entrySet(); // словарь ребер вершины
-                for (HashMap.Entry<Vertex, Edge<Double>> edge : set) {
-                    writer.write(vertex.getNumber() +
-                            "-" + edge.getKey().getNumber() + " " + edge.getValue().getWeight());
-                    writer.write('\n');
-                }
-            }
-
-            writer.write("Found spanning tree:\n");
-            for (Edge<Double> res : spanningTree) {
-                writer.write(res.getVertexFrom().getNumber() +
-                        "-" + res.getVertexTo().getNumber() + " " + res.getWeight());
-                writer.append('\n');
-            }
-
-            writer.flush();
-        } catch (IOException e) {
-            logger.info("Couldn't write to file: " + e.getMessage());
-        }
     }
 
     public Stack<Edge<Double>> getSpanningTree() {

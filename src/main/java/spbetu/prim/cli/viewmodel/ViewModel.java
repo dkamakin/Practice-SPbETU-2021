@@ -8,7 +8,9 @@ import spbetu.prim.model.algorithm.PrimAlgorithm;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.loader.FileLoader;
+import spbetu.prim.model.saver.FileSaver;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +151,15 @@ public class ViewModel {
         }
     }
 
-    public void writeToFile(String fileName) {
-        algorithm.writeToFile(fileName);
+    public void saveGraphToFile(String fileName){
+        log.info("Trying to write to {}", fileName);
+
+        try{
+            FileSaver fileSaver = new FileSaver(fileName);
+            fileSaver.saveGraph(graph, algorithm);
+        }catch (FileNotFoundException e){
+            log.error("Couldn't write to the file: " + e.getMessage());
+        }
     }
+
 }

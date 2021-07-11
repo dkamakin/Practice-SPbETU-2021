@@ -8,18 +8,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import spbetu.prim.exception.GraphInputException;
 import spbetu.prim.gui.viewmodel.EdgeView;
 import spbetu.prim.gui.viewmodel.GraphView;
-import spbetu.prim.gui.window.AboutWindow;
-import spbetu.prim.gui.window.FAQWindow;
-import spbetu.prim.gui.window.InfoWindow;
-import spbetu.prim.gui.window.WeightWindow;
+import spbetu.prim.gui.window.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -204,7 +203,8 @@ public class View implements Initializable {
 
     public String getFileName(Window ownerWindow) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open file");
+        fileChooser.setTitle("Choose file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
         File file = fileChooser.showOpenDialog(ownerWindow);
 
         if (file == null)
@@ -219,6 +219,8 @@ public class View implements Initializable {
         if (fileName == null || fileName.isEmpty()) {
             return;
         }
+
+        clearClicked();
 
         List<EdgeView> graphFromFile = viewModel.readGraphFromFile(
                 fileName,
@@ -243,6 +245,58 @@ public class View implements Initializable {
 
             anchorPane.getChildren().add(pane);
         }
+    }
+
+    public void saveClicked(){
+
+        if(viewModel.getFileName() == null){
+            saveAsClicked();
+            return;
+        }
+
+        String fileName = viewModel.getFileName();
+        viewModel.saveGraphToFile(fileName);
+    }
+
+    public void saveAsClicked(){
+        String fileName = getFileName(anchorPane.getScene().getWindow());
+        viewModel.setFileName(fileName);
+        viewModel.saveGraphToFile(fileName);
+    }
+
+    public String getDirectoryName(Window ownerWindow){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose directory");
+        File file = directoryChooser.showDialog(ownerWindow);
+
+        if (file == null)
+            return null;
+
+        return file.getPath();
+    }
+
+    public String askFileName() {
+        log.info("Showing the weight window");
+        return new FileNameWindow().getFileName();
+    }
+
+    public void newFileClicked() throws IOException {
+        StringBuilder fileName = new StringBuilder(getDirectoryName(anchorPane.getScene().getWindow()));
+
+        if(fileName.isEmpty()){
+            log.info("Couldn't open the directory");
+            return;
+        }
+
+        fileName.append("/" + askFileName() + ".txt");
+        File file = new File(fileName.toString());
+        if(file.createNewFile()){
+            log.info("Create new file");
+        }else {
+            log.info("File already exists");
+        }
+
+        viewModel.setFileName(fileName.toString());
     }
 
     public void moveClicked() {
