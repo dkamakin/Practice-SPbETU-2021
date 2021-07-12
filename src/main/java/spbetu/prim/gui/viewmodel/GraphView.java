@@ -70,6 +70,9 @@ public class GraphView {
     }
 
     public List<EdgeView> readGraphFromFile(String fileName, int circleX, int circleY) {
+        if (fileName == null || fileName.isEmpty())
+            return null;
+
         log.info("Trying to read from {}", fileName);
 
         try {
@@ -88,6 +91,9 @@ public class GraphView {
     }
 
     public void saveGraphToFile(String fileName) {
+        if (fileName == null || fileName.isEmpty())
+            return;
+
         log.info("Trying to save to {}", fileName);
 
         try {
