@@ -34,6 +34,7 @@ public class GraphView {
     private List<EdgeView> edges;
     private int currId;
     private StackPane prevStackPane;
+    private StackPane addNodeStackPane;
     private AlgorithmTask algorithmTask;
 
     public GraphView(ScrollPane scrollPane) {
@@ -60,11 +61,18 @@ public class GraphView {
         algorithm.restart();
     }
 
-    public StackPane addNode(double x, double y) {
-        return visualizer.getVertex(x, y, currId++);
+    public void addNode(double x, double y) {
+        addNodeStackPane = visualizer.getVertex(x, y, currId++);
+    }
+
+    public StackPane getAddNode() {
+        return addNodeStackPane;
     }
 
     public List<EdgeView> readGraphFromFile(String fileName, int circleX, int circleY) {
+        if (fileName == null || fileName.isEmpty())
+            return null;
+
         log.info("Trying to read from {}", fileName);
 
         try {
@@ -83,6 +91,9 @@ public class GraphView {
     }
 
     public void saveGraphToFile(String fileName) {
+        if (fileName == null || fileName.isEmpty())
+            return;
+
         log.info("Trying to save to {}", fileName);
 
         try {
