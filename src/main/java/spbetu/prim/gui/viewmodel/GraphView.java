@@ -291,10 +291,14 @@ public class GraphView {
 
             if (firstNode == getNodeId(first) && secondNode == getNodeId(second)) {
                 log.info("Found the edge in the list of edgeview");
-                Color color = Color.BLUE;
+                Color color = Color.GREEN;
                 visualizer.paintCircle(first, color);
                 visualizer.paintCircle(second, color);
-                visualizer.paintLine(elem.getLine(), color, 3);
+                visualizer.paintLine(elem.getLine(), color, 4);
+                Text firstText = (Text) first.getChildren().get(1);
+                Text secondText = (Text) second.getChildren().get(1);
+                firstText.setStroke(Color.WHITE);
+                secondText.setStroke(Color.WHITE);
                 return;
             }
         }
