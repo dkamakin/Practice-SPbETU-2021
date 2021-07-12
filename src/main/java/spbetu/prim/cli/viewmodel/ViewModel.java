@@ -139,6 +139,9 @@ public class ViewModel {
     }
 
     public void readGraphFromFile(String fileName) {
+        if (fileName == null || fileName.isEmpty())
+            return;
+
         log.info("Trying to read from {}", fileName);
 
         try {
@@ -151,6 +154,9 @@ public class ViewModel {
     }
 
     public void saveGraphToFile(String fileName) {
+        if (fileName == null || fileName.isEmpty())
+            return;
+
         log.info("Trying to write to {}", fileName);
 
         try {

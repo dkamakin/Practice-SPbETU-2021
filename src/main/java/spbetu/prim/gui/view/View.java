@@ -254,6 +254,9 @@ public class View implements Initializable {
                 (int) (anchorPane.getScene().getHeight() / 2.3)
         );
 
+        if (graphFromFile == null)
+            return;
+
         for (EdgeView elem : graphFromFile) {
             elem.getWeight().setOnMouseClicked(this::weightClicked);
             elem.getFrom().setOnMouseClicked(this::stackPaneClicked);
