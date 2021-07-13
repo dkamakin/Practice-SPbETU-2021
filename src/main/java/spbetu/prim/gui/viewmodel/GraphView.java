@@ -295,15 +295,35 @@ public class GraphView {
                 visualizer.paintCircle(first, color);
                 visualizer.paintCircle(second, color);
                 visualizer.paintLine(elem.getLine(), color, 4);
+
                 Text firstText = (Text) first.getChildren().get(1);
                 Text secondText = (Text) second.getChildren().get(1);
-                firstText.setStroke(Color.WHITE);
-                secondText.setStroke(Color.WHITE);
+                firstText.setFill(Color.WHITE);
+                secondText.setFill(Color.WHITE);
                 return;
             }
         }
 
         log.info("Didn't find the edge in the list of edgeview");
+    }
+
+    public void showOnlyTree() {
+        for (EdgeView elem : edges) {
+            int numberFrom = getNodeId(elem.getFrom());
+            int numberTo = getNodeId(elem.getTo());
+            if (!algorithm.isInTree(numberFrom, numberTo)) {
+                log.info("Hiding node {} - {}", numberFrom, numberTo);
+                elem.getWeight().setVisible(false);
+                elem.getLine().setVisible(false);
+            }
+        }
+    }
+
+    public void setAllVisible() {
+        for (EdgeView elem : edges) {
+            elem.getWeight().setVisible(true);
+            elem.getLine().setVisible(true);
+        }
     }
 
     public int getNodeId(StackPane stackPane) {

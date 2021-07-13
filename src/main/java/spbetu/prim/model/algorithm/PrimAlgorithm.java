@@ -39,6 +39,19 @@ public class PrimAlgorithm {
         return instance;
     }
 
+    public boolean isInTree(int vertexFrom, int vertexTo) {
+        for (Edge<Double> elem : spanningTree) {
+            if (vertexFrom == elem.getVertexFrom().getNumber() &&
+                    vertexTo == elem.getVertexTo().getNumber())
+                return true;
+            else if (vertexFrom == elem.getVertexTo().getNumber() &&
+                    vertexTo == elem.getVertexFrom().getNumber())
+                return true;
+        }
+
+        return false;
+    }
+
     public void runAlgorithm() {
         if (graph.getSize() > 0) {
             graph.getVertex(0).setVisited(true);  // посещаем первую вершину

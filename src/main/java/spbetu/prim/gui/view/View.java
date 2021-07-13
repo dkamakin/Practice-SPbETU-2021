@@ -2,6 +2,7 @@ package spbetu.prim.gui.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -35,12 +36,18 @@ import java.util.ResourceBundle;
 
 @Slf4j
 public class View implements Initializable {
+
     @FXML
     public ScrollPane logTextArea;
+
     @FXML
     public AnchorPane secondAnchorPane;
+
     @FXML
     public AnchorPane anchorPane;
+
+    @FXML
+    public CheckBox showOnlyTree;
     private Command command;
     private GraphView viewModel;
     private ActionType actionType;
@@ -335,5 +342,15 @@ public class View implements Initializable {
         }
 
         actionType = ActionType.MOVE_CHOOSE;
+    }
+
+    public void showOnlyTreeClicked() {
+        if (!showOnlyTree.isSelected()) {
+            log.info("Set all visible");
+            viewModel.setAllVisible();
+        } else {
+            log.info("Show only tree");
+            viewModel.showOnlyTree();
+        }
     }
 }
