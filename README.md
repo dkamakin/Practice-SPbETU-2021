@@ -4,7 +4,7 @@ The program is designed to visualize the Prim algorithm.
 
 Authors: [Kamakin Daniil](https://github.com/dkamakin), [Moskalenko Elizaveta](https://github.com/moskalenko9381), [Aukhadiev Alexander](https://github.com/Auhadiev)
 
-![mainwindow](https://user-images.githubusercontent.com/54929583/125272096-21bfc880-e314-11eb-918a-c740a2adbdea.png)
+![mainwindow](https://user-images.githubusercontent.com/54929583/125426267-106a1a65-af0f-48a5-9988-fc36c6061c36.png)
 
 # Run on Windows
 
