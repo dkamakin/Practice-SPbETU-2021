@@ -290,6 +290,8 @@ public class GraphView {
             StackPane second = elem.getTo();
 
             if (firstNode == getNodeId(first) && secondNode == getNodeId(second)) {
+                elem.getLine().setVisible(true);
+                elem.getWeight().setVisible(true);
                 log.info("Found the edge in the list of edgeview");
                 Color color = Color.GREEN;
                 visualizer.paintCircle(first, color);
