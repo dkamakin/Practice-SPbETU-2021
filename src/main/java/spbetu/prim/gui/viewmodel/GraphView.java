@@ -218,7 +218,9 @@ public class GraphView {
     public void runAlgorithm() {
         algorithmTask = new AlgorithmTask(this);
         algorithmTask.setOnSucceeded(this::doneRun);
-        new Thread(algorithmTask).start();
+        Thread thread = new Thread(algorithmTask);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public void stopAlgorithm() {

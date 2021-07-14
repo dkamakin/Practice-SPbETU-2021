@@ -1,5 +1,6 @@
-package spbetu.prim.model.graph.builder.pattern;
+package spbetu.prim.model.algorithm.builder;
 
+import spbetu.prim.model.algorithm.builder.Builder;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Vertex;
 

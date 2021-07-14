@@ -1,4 +1,4 @@
-package spbetu.prim.model.graph.builder.pattern;
+package spbetu.prim.model.algorithm.builder;
 
 import spbetu.prim.model.graph.Vertex;
 
