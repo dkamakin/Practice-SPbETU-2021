@@ -26,10 +26,10 @@ java --module-path javafx\windows\lib --add-modules javafx.controls,javafx.fxml 
 3. Run the next command: 
 
 GUI:
-java --module-path javafx\linux\lib --add-modules javafx.controls,javafx.fxml -jar .\practice_spbetu.jar
+java --module-path javafx/linux/lib --add-modules javafx.controls,javafx.fxml -jar practice_spbetu.jar
 
 CLI:
-java --module-path javafx\linux\lib --add-modules javafx.controls,javafx.fxml -jar .\practice_spbetu.jar --cli
+java --module-path javafx/linux/lib --add-modules javafx.controls,javafx.fxml -jar practice_spbetu.jar --cli
 
 # Run on macOS
 
@@ -38,10 +38,10 @@ java --module-path javafx\linux\lib --add-modules javafx.controls,javafx.fxml -j
 3. Run the next command: 
 
 GUI:
-java --module-path javafx\macos\lib --add-modules javafx.controls,javafx.fxml -jar .\practice_spbetu.jar
+java --module-path javafx/linux/lib --add-modules javafx.controls,javafx.fxml -jar practice_spbetu.jar
 
 CLI:
-java --module-path javafx\macos\lib --add-modules javafx.controls,javafx.fxml -jar .\practice_spbetu.jar --cli
+java --module-path javafx/linux/lib --add-modules javafx.controls,javafx.fxml -jar practice_spbetu.jar --cli
 
 # FAQ
 
