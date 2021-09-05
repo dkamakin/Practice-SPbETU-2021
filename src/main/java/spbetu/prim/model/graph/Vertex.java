@@ -1,11 +1,12 @@
 package spbetu.prim.model.graph;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class Vertex {  // класс ребра
     private int number;
-    private HashMap<Vertex, Edge<Double>> edges;
+    private Map<Vertex, Edge<Double>> edges;
     private boolean visited;
 
     Vertex(int number) {
@@ -71,11 +72,11 @@ public class Vertex {  // класс ребра
         this.number = number;
     }
 
-    public HashMap<Vertex, Edge<Double>> getEdges() {
+    public Map<Vertex, Edge<Double>> getEdges() {
         return edges;
     }
 
-    public void setEdges(HashMap<Vertex, Edge<Double>> edges) {
+    public void setEdges(Map<Vertex, Edge<Double>> edges) {
         this.edges = edges;
     }
 }

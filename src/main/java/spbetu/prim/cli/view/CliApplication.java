@@ -71,7 +71,6 @@ public class CliApplication {
                     break;
 
                 case "3":
-                    //  viewModel.nextStep();
                     command = new NextStepCommand();
                     command.execute(viewModel);
                     break;

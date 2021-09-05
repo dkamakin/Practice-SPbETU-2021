@@ -23,7 +23,7 @@ public class ApplicationLogger implements ILogger {
     }
 
     @Override
-    public <T> void update() {
+    public void update() {
         info(message);
         this.message = new StringBuilder();
     }

@@ -2,10 +2,7 @@ package spbetu.prim.model.graph;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class Graph {
@@ -20,7 +17,7 @@ public class Graph {
         List<Edge<Double>> result = new ArrayList<>();
 
         for (Vertex vertex : vertices) {
-            HashMap<Vertex, Edge<Double>> edges = vertex.getEdges();
+            Map<Vertex, Edge<Double>> edges = vertex.getEdges();
             Set<HashMap.Entry<Vertex, Edge<Double>>> set = edges.entrySet();
 
             for (HashMap.Entry<Vertex, Edge<Double>> elem : set) {

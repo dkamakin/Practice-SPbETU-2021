@@ -8,13 +8,13 @@ import javafx.scene.text.Text;
 public class ScrollPaneLog {
 
     private final Text text;
-    private final ScrollPane scrollPaneLog;
+    private final ScrollPane pane;
 
     public ScrollPaneLog(ScrollPane scrollPane) {
         text = new Text();
         text.setFont(Font.font("Times new roman", FontWeight.NORMAL, 16));
-        scrollPaneLog = scrollPane;
-        scrollPaneLog.setContent(text);
+        pane = scrollPane;
+        pane.setContent(text);
     }
 
     public void addNewMessage(String message) {

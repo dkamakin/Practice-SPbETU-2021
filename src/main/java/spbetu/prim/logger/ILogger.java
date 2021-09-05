@@ -6,7 +6,7 @@ public interface ILogger {
 
     <T> void append(T message);
 
-    <T> void update();
+    void update();
 
     void clear();
 }

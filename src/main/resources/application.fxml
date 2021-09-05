@@ -34,47 +34,57 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="spbetu.prim.gui.view.View">
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1"
+      fx:controller="spbetu.prim.gui.view.View">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#newFileClicked" text="New File..." />
-                  <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open..." />
-                  <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save as..." />
-               </items></Menu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#newFileClicked" text="New File..."/>
+                        <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open..."/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save as..."/>
+                    </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About" />
-                        <MenuItem mnemonicParsing="false" onAction="#faqClicked" text="FAQ" />
+                        <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About"/>
+                        <MenuItem mnemonicParsing="false" onAction="#faqClicked" text="FAQ"/>
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
-        <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" onMouseClicked="#anchorPaneClicked" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+        <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" onMouseClicked="#anchorPaneClicked"
+                    prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <AnchorPane fx:id="secondAnchorPane" layoutX="439.0" onMouseClicked="#scrollPaneClicked" prefHeight="375.0" prefWidth="201.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1000.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane fx:id="secondAnchorPane" layoutX="439.0" onMouseClicked="#scrollPaneClicked"
+                            prefHeight="375.0" prefWidth="201.0" AnchorPane.bottomAnchor="0.0"
+                            AnchorPane.leftAnchor="1000.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <ScrollPane fx:id="logTextArea" layoutX="1.0" layoutY="34.0" prefHeight="341.0" prefWidth="224.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0" />
-                        <Button layoutX="100.0" layoutY="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#clearLoggingArea" text="Clear" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="2.0" />
+                        <ScrollPane fx:id="logTextArea" layoutX="1.0" layoutY="34.0" prefHeight="341.0"
+                                    prefWidth="224.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0"/>
+                        <Button layoutX="100.0" layoutY="2.0" maxHeight="1.7976931348623157E308"
+                                maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                onMouseClicked="#clearLoggingArea" text="Clear" AnchorPane.leftAnchor="100.0"
+                                AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="2.0"/>
                     </children>
                 </AnchorPane>
-            <ToolBar prefHeight="19.0" prefWidth="999.0">
-              <items>
-                <Button mnemonicParsing="false" onAction="#prevStepClicked" text="Prev step" />
-                  <Button mnemonicParsing="false" onAction="#nextStepClicked" text="Next step" />
-                  <Button mnemonicParsing="false" onAction="#runClicked" text="Run" />
-                  <Button mnemonicParsing="false" onAction="#stopPressed" text="Stop" />
-                  <Button mnemonicParsing="false" onAction="#resetClicked" text="Reset" />
-                  <Button mnemonicParsing="false" onAction="#clearClicked" text="Clear" />
-                  <CheckBox mnemonicParsing="false" onAction="#deleteClicked" text="Delete" />
-                  <CheckBox mnemonicParsing="false" onAction="#moveClicked" text="Move" />
-                  <CheckBox fx:id="showOnlyTree" mnemonicParsing="false" onAction="#showOnlyTreeClicked" text="Show only tree" />
-              </items>
-            </ToolBar>
+                <ToolBar prefHeight="19.0" prefWidth="999.0">
+                    <items>
+                        <Button mnemonicParsing="false" onAction="#prevStepClicked" text="Prev step"/>
+                        <Button mnemonicParsing="false" onAction="#nextStepClicked" text="Next step"/>
+                        <Button mnemonicParsing="false" onAction="#runClicked" text="Run"/>
+                        <Button mnemonicParsing="false" onAction="#stopPressed" text="Stop"/>
+                        <Button mnemonicParsing="false" onAction="#resetClicked" text="Reset"/>
+                        <Button mnemonicParsing="false" onAction="#clearClicked" text="Clear"/>
+                        <CheckBox mnemonicParsing="false" onAction="#deleteClicked" text="Delete"/>
+                        <CheckBox mnemonicParsing="false" onAction="#moveClicked" text="Move"/>
+                        <CheckBox fx:id="showOnlyTree" mnemonicParsing="false" onAction="#showOnlyTreeClicked"
+                                  text="Show only tree"/>
+                    </items>
+                </ToolBar>
             </children>
         </AnchorPane>
     </children>

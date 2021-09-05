@@ -21,12 +21,12 @@ public class FileLoader implements ILoader {
 
     @Override
     public void loadGraph(Graph graph) {
-        int vertexFrom, vertexTo;
+        int vertexFrom;
+        int vertexTo;
         double edge;
         String dash;
 
-        try {
-            Scanner scanner = new Scanner(file);
+        try (Scanner scanner = new Scanner(file)) {
             log.info("Start reading");
 
             while (scanner.hasNextInt()) {

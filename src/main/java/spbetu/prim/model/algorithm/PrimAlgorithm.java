@@ -2,11 +2,11 @@ package spbetu.prim.model.algorithm;
 
 import spbetu.prim.logger.ConsoleLogger;
 import spbetu.prim.logger.ILogger;
+import spbetu.prim.model.algorithm.builder.Director;
+import spbetu.prim.model.algorithm.builder.MaxEdgeBuilder;
 import spbetu.prim.model.graph.Edge;
 import spbetu.prim.model.graph.Graph;
 import spbetu.prim.model.graph.Vertex;
-import spbetu.prim.model.algorithm.builder.Director;
-import spbetu.prim.model.algorithm.builder.MaxEdgeBuilder;
 
 import java.util.HashMap;
 import java.util.Set;

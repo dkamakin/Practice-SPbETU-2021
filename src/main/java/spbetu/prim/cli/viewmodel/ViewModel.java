@@ -32,29 +32,30 @@ public class ViewModel {
     public EdgeView stringToEdge(String input) throws GraphInputException {
         EdgeView edge = new EdgeView();
         String dash;
-        Scanner scanner = new Scanner(input);
+        try (Scanner scanner = new Scanner(input)) {
 
-        while (scanner.hasNextInt()) {
-            edge.setVertexFrom(scanner.nextInt());
-            dash = scanner.next();
+            while (scanner.hasNextInt()) {
+                edge.setVertexFrom(scanner.nextInt());
+                dash = scanner.next();
 
-            if (!dash.equals("-")) {
-                throw new GraphInputException("Between vertexes you need to enter \"-\"");
-            }
+                if (!dash.equals("-")) {
+                    throw new GraphInputException("Between vertexes you need to enter \"-\"");
+                }
 
-            if (scanner.hasNextInt()) {
-                edge.setVertexTo(scanner.nextInt());
-            } else {
-                throw new GraphInputException("Mistake of reading the second vertex");
-            }
+                if (scanner.hasNextInt()) {
+                    edge.setVertexTo(scanner.nextInt());
+                } else {
+                    throw new GraphInputException("Mistake of reading the second vertex");
+                }
 
-            if (scanner.hasNextInt()) {
-                edge.setWeight(scanner.nextDouble());
-                if (edge.getWeight() > 32000)   // костыль
-                    throw new GraphInputException("Edge weight > 32000");
-            } else {
-                scanner.next();
-                throw new GraphInputException("Wrong weight");
+                if (scanner.hasNextInt()) {
+                    edge.setWeight(scanner.nextDouble());
+                    if (edge.getWeight() > 32000)   // костыль
+                        throw new GraphInputException("Edge weight > 32000");
+                } else {
+                    scanner.next();
+                    throw new GraphInputException("Wrong weight");
+                }
             }
         }
 
@@ -71,25 +72,28 @@ public class ViewModel {
     }
 
     public void deleteEdge(String input) throws GraphInputException {
-        int vertexFrom, vertexTo;
+        int vertexFrom;
+        int vertexTo;
         String dash;
-        Scanner scanner = new Scanner(input);
 
-        vertexFrom = scanner.nextInt();
-        dash = scanner.next();
+        try (Scanner scanner = new Scanner(input)) {
 
-        if (!dash.equals("-")) {
-            throw new GraphInputException("Between vertexes you need to enter \"-\"");
+            vertexFrom = scanner.nextInt();
+            dash = scanner.next();
+
+            if (!dash.equals("-")) {
+                throw new GraphInputException("Between vertexes you need to enter \"-\"");
+            }
+
+            if (scanner.hasNextInt()) {
+                vertexTo = scanner.nextInt();
+            } else {
+                throw new GraphInputException("Mistake of reading the second vertex");
+            }
+
+            if (vertexFrom > 0 && vertexTo > 0)
+                graph.deleteEdge(vertexFrom, vertexTo);
         }
-
-        if (scanner.hasNextInt()) {
-            vertexTo = scanner.nextInt();
-        } else {
-            throw new GraphInputException("Mistake of reading the second vertex");
-        }
-
-        if (vertexFrom > 0 && vertexTo > 0)
-            graph.deleteEdge(vertexFrom, vertexTo);
     }
 
     public boolean nextStep() {
@@ -99,8 +103,7 @@ public class ViewModel {
     }
 
     public void runAlgorithm() {
-        while (!nextStep()) {
-        }
+        while (!nextStep()) ;
     }
 
     public void prevStep() {

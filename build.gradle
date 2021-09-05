@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'spbetu.prim'
-version '1.0.2'
+version '1.0.7'
 
 repositories {
     mavenCentral()
@@ -16,39 +16,34 @@ javafx {
 }
 
 jar {
-    from {
-        configurations.runtime.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
     manifest {
         attributes 'Main-Class': 'spbetu.prim.Main'
     }
-
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    from {
+        exclude '**/module-info.class'
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 mainClassName = "spbetu.prim.Main"
 
 dependencies {
-    implementation 'org.slf4j:slf4j-simple:1.7.30'
-    compile 'org.slf4j:slf4j-api:1.7.30'
-    compile 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'org.slf4j:slf4j-simple:1.7.32'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    testImplementation 'org.slf4j:slf4j-log4j12:1.7.32'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.32'
     implementation 'org.projectlombok:lombok:1.18.20'
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-    implementation 'junit:junit:4.12'
-    implementation 'junit:junit:4.12'
-    implementation 'junit:junit:4.12'
+    implementation 'junit:junit:4.13.2'
+    implementation 'junit:junit:4.13.2'
+    implementation 'junit:junit:4.13.2'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 }
 
 test {
